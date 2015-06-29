@@ -34,7 +34,7 @@ import hudson.model.Hudson;
 import lib.LayoutTagLib
 
 	p(){
-		f.section(title:_("Failed Build Deactivator"))
+		f.section(title:_("Failed Job Deactivator"))
 		
 		f.optionalBlock(title:_("Configure Failed Job Deactivator"), field:"optionalBlock", checked: instance?.isConfigured){
 			
