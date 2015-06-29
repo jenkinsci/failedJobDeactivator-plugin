@@ -1,0 +1,4 @@
+<?jelly escape-by-default='true'?>
+<div>
+  This plugin deactivates or deletes jobs when they are unsed for a longer time. 
+</div>

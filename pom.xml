@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.jenkins-ci.plugins</groupId>
+    <artifactId>plugin</artifactId>
+    <version>1.607</version>
+    <relativePath/>
+  </parent>
+  <groupId>de.einsundeins.jenkins.plugins.failedjobdeactivator</groupId>
+  <artifactId>failedJobDeactivator</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>hpi</packaging>
+
+  <name>Failed Job Deactivator</name>
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>http://opensource.org/licenses/MIT</url>
+      <comments>All source code is under the MIT license.</comments>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>JochenAFuerbacher</id>
+      <name>Jochen A. Fürbacher</name>
+      <email>jochen.fuerbacher@1und1.de</email>
+      <organization>1&amp;1 Telecommunication Holding SE</organization>
+      <organizationUrl>https://www.1und1.de/</organizationUrl>
+    </developer>
+  </developers>
+  
+  <properties>
+        <jacoco-maven-plugin.version>0.7.4.201502262128</jacoco-maven-plugin.version>
+  </properties> 
+
+  <!-- Assuming you want to host on @jenkinsci:
+  <scm>
+    <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
+    <url>http://github.com/jenkinsci/${project.artifactId}-plugin</url>
+  </scm>
+   -->
+   
+  <repositories>
+    <repository>
+      <id>repo.jenkins-ci.org</id>
+      <url>http://repo.jenkins-ci.org/public/</url>
+    </repository>
+  </repositories>
+  
+  <pluginRepositories>
+    <pluginRepository>
+      <id>repo.jenkins-ci.org</id>
+      <url>http://repo.jenkins-ci.org/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.sonyericsson.jenkins.plugins.bfa</groupId>
+      <artifactId>build-failure-analyzer</artifactId>
+      <version>1.13.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>mailer</artifactId>
+      <version>1.15</version>
+    </dependency>
+  </dependencies>
+
+
+  <description>This plugin deactivates or deletes jobs, when jobs haven't been built successfully for a longer time.</description>
+  
+  <scm>
+  	<developerConnection>Jochen A. Fürbacher</developerConnection>
+  </scm>
+  
+  <build>
+    <plugins>
+       <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco-maven-plugin.version}</version>
+          <executions>
+              <execution>
+                  <goals>
+                     <goal>prepare-agent</goal>
+                     <goal>report</goal>
+                     <goal>prepare-agent-integration</goal>
+                     <goal>report-integration</goal>
+                  </goals>
+              </execution>
+          </executions>
+       </plugin>
+   </plugins>
+ </build>
+ 
+</project>
