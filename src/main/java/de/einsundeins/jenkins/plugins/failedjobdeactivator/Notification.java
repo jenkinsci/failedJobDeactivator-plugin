@@ -227,30 +227,38 @@ public class Notification {
         Properties props = new Properties(System.getProperties());
         props.put("mail.smtp.host", smtpServer);
         
+        //Set SMTP port to default if no port is entered. 
         if (smtpPort != null) {
             props.put("mail.smtp.port", smtpPort);
         }else{
             props.put("mail.smtp.port", "25");
         }        
 
+        //Set SSL configuration
         if (useSsl) {
-            if (props.getProperty("mail.smtp.socketFactory.port") == null) {
-                String port = smtpPort == null ? "465" : smtpPort;
-                props.put("mail.smtp.port", port);
-                props.put("mail.smtp.socketFactory.port", port);
-            }
 
+            //Used to create SMTP sockets.
             if (props.getProperty("mail.smtp.socketFactory.class") == null) {
                 props.put("mail.smtp.socketFactory.class",
                         "javax.net.ssl.SSLSocketFactory");
             }
+            
+            //Set SMTP port to default if no port is entered.
+            if (props.getProperty("mail.smtp.socketFactory.port") == null) {
+                String port = (smtpPort == null) ? "465" : smtpPort;
+                props.put("mail.smtp.port", port);
+                props.put("mail.smtp.socketFactory.port", port);
+            }
+            
             props.put("mail.smtp.socketFactory.fallback", "false");
         }
 
+        //Used to set authentification
         if (smtpAuthUserName != null) {
             props.put("mail.smtp.auth", "true");
         }
 
+        //Set timeout (default is infinity).
         props.put("mail.smtp.timeout", "60000");
         props.put("mail.smtp.connectiontimeout", "60000");
         
