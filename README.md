@@ -7,9 +7,9 @@ Detected jobs can either get deactivated or deleted. The rules can be chosen by 
 using the build-failure-analyzer-Plugin.
 
 ## Maintainer
-Jochen A. Fürbacher
-1&1 Telecommunication SE
-jochen.fuerbacher@1und1.de
+Jochen A. Fürbacher  
+1&1 Telecommunication SE  
+jochen.fuerbacher@1und1.de  
 
 ## License
 The MIT License (MIT)
