@@ -52,7 +52,7 @@ public class DetectedJob {
     /**
      * Days since last build.
      */
-    private long timeOfLastBuild;
+    private int timeOfLastBuild;
     
     /**
      * Result of the last build.
@@ -127,7 +127,7 @@ public class DetectedJob {
      * Getter for the days since last build.
      * @return days since last build.
      */
-    public long getTimeOfLastBuild(){
+    public int getTimeOfLastBuild(){
         return this.timeOfLastBuild;
     }
     
@@ -135,7 +135,7 @@ public class DetectedJob {
      * Setter for the days since last build.
      * @param timeOfLastBuild
      */
-    public void setTimeOfLastBuild(long timeOfLastBuild){
+    public void setTimeOfLastBuild(int timeOfLastBuild){
         this.timeOfLastBuild = timeOfLastBuild;
     }
     

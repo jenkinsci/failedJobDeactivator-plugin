@@ -6,8 +6,10 @@ This plugin searches jenkins jobs which havent's been built successfully for a l
 Detected jobs can either get deactivated or deleted. The rules can be chosen by the admin
 using the build-failure-analyzer-Plugin.
 
-## Maintainers
-Jochen A. Fürbacher - jochen.fuerbacher@1und1.de
+## Maintainer
+Jochen A. Fürbacher
+1&1 Telecommunication SE
+jochen.fuerbacher@1und1.de
 
 ## License
 The MIT License (MIT)

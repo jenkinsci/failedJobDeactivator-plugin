@@ -228,23 +228,23 @@ public class Notification {
         props.put("mail.smtp.host", smtpServer);
         
         //Set SMTP port to default if no port is entered. 
-        if (smtpPort != null) {
+        if(smtpPort != null) {
             props.put("mail.smtp.port", smtpPort);
         }else{
             props.put("mail.smtp.port", "25");
         }        
 
         //Set SSL configuration
-        if (useSsl) {
+        if(useSsl) {
 
             //Used to create SMTP sockets.
-            if (props.getProperty("mail.smtp.socketFactory.class") == null) {
+            if(props.getProperty("mail.smtp.socketFactory.class") == null) {
                 props.put("mail.smtp.socketFactory.class",
                         "javax.net.ssl.SSLSocketFactory");
             }
             
             //Set SMTP port to default if no port is entered.
-            if (props.getProperty("mail.smtp.socketFactory.port") == null) {
+            if(props.getProperty("mail.smtp.socketFactory.port") == null) {
                 String port = (smtpPort == null) ? "465" : smtpPort;
                 props.put("mail.smtp.port", port);
                 props.put("mail.smtp.socketFactory.port", port);
@@ -254,7 +254,7 @@ public class Notification {
         }
 
         //Used to set authentification
-        if (smtpAuthUserName != null) {
+        if(smtpAuthUserName != null) {
             props.put("mail.smtp.auth", "true");
         }
 

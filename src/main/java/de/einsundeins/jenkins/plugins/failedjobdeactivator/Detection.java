@@ -356,7 +356,7 @@ public class Detection {
      * @param resultOfLastBuild
      */
     private void setDetectedJob(AbstractProject<?, ?> job, String failureCause,
-            boolean deleteJob, long timeOfLastBuild, String resultOfLastBuild) {
+            boolean deleteJob, int timeOfLastBuild, String resultOfLastBuild) {
 
         DetectedJob detectedJob = new DetectedJob();
         detectedJob.setaProject(job);
@@ -427,9 +427,9 @@ public class Detection {
      * @param timestamp in 64 bit unix time
      * @return number of days
      */
-    private long calculateDayDifference(long timestamp){
+    private int calculateDayDifference(long timestamp){
         
-        return ((systemtime - timestamp)/Constants.DAYS_TO_64BIT_UNIXTIME);
+        return (int)((systemtime - timestamp)/Constants.DAYS_TO_64BIT_UNIXTIME);
     }
 
     /**
@@ -456,7 +456,7 @@ public class Detection {
      * @param deleteJob
      */
     protected void testSetDetectedJob(AbstractProject<?, ?> job, String failureCause,
-            boolean deleteJob, long timeOfLastBuild, String resultOfLastBuild){
+            boolean deleteJob, int timeOfLastBuild, String resultOfLastBuild){
         
         setDetectedJob(job, failureCause, deleteJob, timeOfLastBuild, resultOfLastBuild);
     }
