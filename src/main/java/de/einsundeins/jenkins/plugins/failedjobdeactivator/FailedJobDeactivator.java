@@ -443,6 +443,24 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
                 return Constants.LASTSUCCESSFULBUILD_DEFAULT;
             }
         }
+        
+        /**
+         * 
+         * @return Default deadline of the last successful build.
+         */
+        public int getDefaultGlobalLastManuallyTriggered() {
+
+            return Constants.LASTMANUALLYTRIGGERED_DEFAULT;
+        }
+
+        /**
+         * 
+         * @return Default deadline of the last manually triggered build.
+         */
+        public int getDefaultGlobalLastSuccessfulBuild() {
+
+            return Constants.LASTSUCCESSFULBUILD_DEFAULT;
+        }
 
 
         /**

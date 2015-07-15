@@ -49,12 +49,12 @@ import lib.LayoutTagLib
 		}
 		
 		f.entry(title:_("Last successful build"), field:"globalLastSuccessfulBuild", 
-				description:_("Value in days. Default value is")+" "+ descriptor.getGlobalLastSuccessfulBuild() + "."){
+				description:_("Value in days. Default value is")+" "+ descriptor.getDefaultGlobalLastSuccessfulBuild() + "."){
      		f.textbox()
      	}
   
   		f.entry(title:_("Last manual triggered build"), field:"globalLastManuallyTriggered", 
-  				description:_("Value in days. Default value is")+" "+ descriptor.getGlobalLastManuallyTriggered() + "."){
+  				description:_("Value in days. Default value is")+" "+ descriptor.getDefaultGlobalLastManuallyTriggered() + "."){
   			f.textbox()
   		}
   						
