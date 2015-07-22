@@ -355,7 +355,8 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
             failureCauseIds = (List<String>) failureCauseId;
 
             int i = 0;
-
+            
+            //Assigning job handling to failure causes
             while (failureCauseId != null && i < failureCauseIds.size()) {
 
                 String[] localJobHandling = new String[2];
