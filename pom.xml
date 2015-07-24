@@ -13,6 +13,7 @@
   <artifactId>failedJobDeactivator</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>hpi</packaging>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/FailedJobDeactivator+Plugin</url>
 
   <name>Failed Job Deactivator</name>
   <licenses>
@@ -37,13 +38,11 @@
         <jacoco-maven-plugin.version>0.7.4.201502262128</jacoco-maven-plugin.version>
   </properties> 
 
-  <!-- Assuming you want to host on @jenkinsci:
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
     <url>http://github.com/jenkinsci/${project.artifactId}-plugin</url>
   </scm>
-   -->
    
   <repositories>
     <repository>
@@ -74,10 +73,6 @@
 
 
   <description>This plugin deactivates or deletes jobs, when jobs haven't been built successfully for a longer time.</description>
-  
-  <scm>
-  	<developerConnection>Jochen A. Fürbacher</developerConnection>
-  </scm>
   
   <build>
     <plugins>
