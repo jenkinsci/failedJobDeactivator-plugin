@@ -58,10 +58,9 @@ public final class Constants {
      * The default value of handling a job.
      */
     public static final String DEFAULT_HANDLING = "Delete";
-
+    
     /**
-     * String that gets showen when entered value in frontend is wrong.
+     * URL to the icon file.
      */
-    public static final String FORMVALIDATION_DEADLINES = "Value is too small or no number.";
-
+    public static final String ICON_FILE_ULR = "/plugin/failedJobDeactivator/icons/user-trash.png";
 }

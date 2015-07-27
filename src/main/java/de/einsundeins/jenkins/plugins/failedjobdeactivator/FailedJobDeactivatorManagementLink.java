@@ -42,7 +42,7 @@ public class FailedJobDeactivatorManagementLink extends ManagementLink {
      */
     public String getIconFileName() {
 
-        return "/plugin/failedJobDeactivator/icons/user-trash.png";
+        return Constants.ICON_FILE_ULR;
 
     }
 
@@ -51,8 +51,7 @@ public class FailedJobDeactivatorManagementLink extends ManagementLink {
      */
     public String getDisplayName() {
 
-        return "Failed Job Deactivator";
-
+        return Messages.displayName();
     }
 
     /**
@@ -81,6 +80,6 @@ public class FailedJobDeactivatorManagementLink extends ManagementLink {
     @Override
     public String getDescription() {
 
-        return "Start triggering of detection.";
+        return Messages.managementLinkDescription();
     }
 }
