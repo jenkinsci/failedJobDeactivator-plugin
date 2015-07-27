@@ -59,6 +59,8 @@ public final class Constants {
      */
     public static final String DEFAULT_HANDLING = "Delete";
     
+    public static final boolean DELETE_NEVER_BUILT_JOBS_DEFAULT = true;
+    
     /**
      * URL to the icon file.
      */

@@ -63,6 +63,10 @@ import lib.LayoutTagLib
      			}
    			}	
 		}
-		
+				
+		f.invisibleEntry(){
+			f.textbox(name:"dateOfFirstJobConfiguration", value:"${instance.getDateOfFirstJobConfiguration()}")
+		}
+						
 		f.section(title:"")
 	}
