@@ -54,61 +54,69 @@ l.layout(title: _("Failed Job Deactivator"), secured: "true") {
 		
 			
 		else{
-		
-			text(_("Number of detected jobs") + ": " + my.getDetectedJobs().size());
-		
-			def i = 0		
-			def j = 0
-		
-			table(border:"1px", class:"pane sortable") {
-				thead() {
-					tr(){
-						th(class:"pane-header") {
-							text("Job")
-						}
-						th(class:"pane-header") {
-							text(_("Failure causes"))
-						}
-						th(class:"pane-header") {
-							text(_("Days since last build"))
-						}
-						th(class:"pane-header") {
-							text(_("Result of last build"))
-						}
-						th(class:"pane-header") {
-							text(_("Delete"))
-						}
-					}
-				}
-		
-			
-				tbody(){
-					while(i < my.getDetectedJobs().size()){
-						tr(){
-							td(align:"left") {							
-								a(href:"${rootURL}/${my.getDetectedJobs().get(i).getaProject().getUrl()}", my.getDetectedJobs().get(i).getaProject().getFullName())
-							}
-							td(align:"left"){
-								text(my.getDetectedJobs().get(i).getFailureCause())
-							}
-							td(align:"right"){
-								text(my.getDetectedJobs().get(i).getTimeOfLastBuild())
-							}
-							td(align:"left"){
-								text(my.getDetectedJobs().get(i).getResultOfLastBuild())
-							}
-							td(align:"left"){
-								text(_(my.getDetectedJobs().get(i).isDeleteJob().toString()))
-							}
-						}
-						i++
-					}
-				}
-			
-			
-			}
-			
 			f.form(action: "handleJobs") {
+			
+				text(_("Number of detected jobs") + ": " + my.getDetectedJobs().size());
+		
+				def i = 0		
+				def j = 0
+		
+				table(border:"1px", class:"pane sortable") {
+					thead() {
+						tr(){
+							th(class:"pane-header") {
+								text("Job")
+							}
+							th(class:"pane-header") {
+								text(_("Failure causes"))
+							}
+							th(class:"pane-header") {
+								text(_("Days since last build"))
+							}
+							th(class:"pane-header") {
+								text(_("Result of last build"))
+							}
+							th(class:"pane-header") {
+								text(_("Handling"))
+							}
+						}
+					}
+		
+			
+					tbody(){
+						while(i < my.getDetectedJobs().size()){
+							tr(){
+								td(align:"left") {							
+									a(href:"${rootURL}/${my.getDetectedJobs().get(i).getaProject().getUrl()}", 
+									my.getDetectedJobs().get(i).getaProject().getFullName())
+								}
+								td(align:"left"){
+									text(my.getDetectedJobs().get(i).getFailureCause())
+								}
+								td(align:"right"){
+									text(my.getDetectedJobs().get(i).getTimeOfLastBuild())
+								}
+								td(align:"left"){
+									text(my.getDetectedJobs().get(i).getResultOfLastBuild())
+								}
+								td(align:"left"){
+									//text(_(my.getDetectedJobs().get(i).isDeleteJob().toString()))
+										def config = my.getDetectedJobs().get(i).isDeleteJob()
+										select(name:"handleJob"){
+											f.option(value: "Deactivate", selected:(config == false), _("Deactivate"))
+											f.option(value: "Delete", selected:(config == true), _("Delete"))
+											f.option(value: "Ignore", selected:false, _("Ignore")) //For future features
+										}
+								}
+							}
+	
+							i++
+						}
+					}
+			
+			
+				}
+			
 				f.submit(value:_("Start handling jobs"))
 			}
 		}
