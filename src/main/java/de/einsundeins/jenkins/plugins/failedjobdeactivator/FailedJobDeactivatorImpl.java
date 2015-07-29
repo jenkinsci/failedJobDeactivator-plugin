@@ -53,7 +53,7 @@ public class FailedJobDeactivatorImpl extends Plugin {
     
     private List<DetectedJob> dj;
     
-    Logger logger = Logger.getLogger(FailedJobDeactivatorImpl.class
+    private Logger logger = Logger.getLogger(FailedJobDeactivatorImpl.class
             .getName());
 
     /**
