@@ -24,11 +24,19 @@
 
 package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
+import static java.util.logging.Level.WARNING;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+
+import javax.servlet.ServletException;
+
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import jenkins.model.Jenkins;
+import net.sf.json.JSONArray;
 import hudson.Plugin;
 
 /**
@@ -42,6 +50,11 @@ public class FailedJobDeactivatorImpl extends Plugin {
      * The actual detection object.
      */
     private Detection detection;
+    
+    private List<DetectedJob> dj;
+    
+    private Logger logger = Logger.getLogger(FailedJobDeactivatorImpl.class
+            .getName());
 
     /**
      * Getter for the plugin instance.
@@ -93,14 +106,49 @@ public class FailedJobDeactivatorImpl extends Plugin {
             throws IOException {
 
         rsp.sendRedirect("");
+                        
+        try {
+            this.dj = new ArrayList<DetectedJob>();
+            reconfigureJobHandling(req.getSubmittedForm().get("handleJob"));
+        } catch (ServletException e) {
+            logger.log(WARNING, "Failed to get submitted form! " + e);
+        }
+             
+        if(dj.size() != 0){
+            
+            Notification notification = new Notification();
+            notification.doNotification(dj);
         
-        Notification notification = new Notification();
-        notification.doNotification(detection.getDetectedJobs());
+            HandleAction handleAction = new HandleAction();
+            handleAction.handleJobs(dj);
         
-        HandleAction handleAction = new HandleAction();
-        handleAction.handleJobs(detection.getDetectedJobs());
+        }
 
         detection.clearLists();
+    }
+    
+    /**
+     * Reconfigures detected jobs on how to handle them.
+     * @param jobHandling Configured values from frontend (detected jobs). 
+     */
+    private void reconfigureJobHandling(Object jobHandling){
+        
+        JSONArray js = (JSONArray)jobHandling;
+      
+        if(detection.getDetectedJobs().size() != js.size()){
+            logger.log(WARNING, "Could not perform job handling. Invalid size of detected jobs and configuration. Try again!");
+        }else{
+            for(int i = 0; i < detection.getDetectedJobs().size(); i++){
+                                
+                if(js.get(i).equals("Delete")){
+                    dj.add(detection.getDetectedJobs().get(i));
+                    dj.get(dj.size()-1).setDeleteJob(true);
+                }else if(js.get(i).equals("Deactivate")){
+                    dj.add(detection.getDetectedJobs().get(i));
+                    dj.get(dj.size()-1).setDeleteJob(false);
+                }
+            }
+        }
     }
 
 }

@@ -156,7 +156,7 @@ public class DetectionTest {
                
         FailedJobDeactivator.LocalValues localdataTest = new FailedJobDeactivator.LocalValues
                 (active,lastManuallyTriggered, lastSuccessfulBuild,userNotification);
-        FailedJobDeactivator test = new FailedJobDeactivator(localdataTest);      
+        FailedJobDeactivator test = new FailedJobDeactivator(localdataTest, 0);      
         
         
         Detection detection = new Detection();        

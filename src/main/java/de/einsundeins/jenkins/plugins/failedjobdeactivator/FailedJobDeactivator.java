@@ -80,13 +80,19 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
      * Job already configured for plugin?
      */
     private boolean isConfigured;
+    
+    /**
+     * Timestamp of the first job configuration.
+     */
+    private long dateOfFirstJobConfiguration;
+    
 
     /**
      * Default DataBoundConstructor.
      * @param optionalBlock
      */
     @DataBoundConstructor
-    public FailedJobDeactivator(LocalValues optionalBlock) {
+    public FailedJobDeactivator(LocalValues optionalBlock, long dateOfFirstJobConfiguration) {
 
         if (optionalBlock != null) {
             this.active = optionalBlock.active;
@@ -98,6 +104,13 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
             this.active = true;
             this.isConfigured = false;
         }
+                      
+        if(dateOfFirstJobConfiguration <= 0L){
+        	this.dateOfFirstJobConfiguration = System.currentTimeMillis();
+        }else{
+        	this.dateOfFirstJobConfiguration = dateOfFirstJobConfiguration;
+        }
+                
     }
 
     /**
@@ -143,6 +156,15 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
     public boolean getIsConfigured() {
         return this.isConfigured;
     }
+    
+    /**
+     * 
+     * @return Timestamp of the first job configuration.
+     */
+    public long getDateOfFirstJobConfiguration(){
+    	return this.dateOfFirstJobConfiguration;
+    }
+    
 
     /**
      * Descriptor for {@link FailedJobDeactivator}.
@@ -187,6 +209,7 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
          * Global default deadline for the last manually triggered build.
          */
         private int globalLastManuallyTriggered;
+        
 
         /**
          * Loads the persisted global configuration.
@@ -207,7 +230,7 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
         public FormValidation doCheckLastManuallyTriggered(
                 @QueryParameter int value) throws IOException, ServletException {
             if (value < 1) {
-                return FormValidation.error(Constants.FORMVALIDATION_DEADLINES);
+                return FormValidation.error(Messages.errorMessageFormValidationDeadline());
             }
             return FormValidation.ok();
         }
@@ -224,7 +247,7 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
         public FormValidation doCheckLastSuccessfulBuild(
                 @QueryParameter int value) throws IOException, ServletException {
             if (value < 1) {
-                return FormValidation.error(Constants.FORMVALIDATION_DEADLINES);
+                return FormValidation.error(Messages.errorMessageFormValidationDeadline());
             }
             return FormValidation.ok();
         }
@@ -245,7 +268,7 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
                             .matches("([0-9]|[a-z]|[A-Z]|\\.|-|_)+"
                                     + "@([0-9]|[a-z]|[A-Z]|\\.|-|_)+"
                                     +"\\.([0-9]|[a-z]|[A-Z]|\\.|-|_)+")) {
-                return FormValidation.error("Invalid email address.");
+                return FormValidation.error(Messages.errorMessageFormValidationEmailAddresses());
             }
             return FormValidation.ok();
         }
@@ -262,7 +285,7 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
         public FormValidation doCheckGlobalLastSuccessfulBuild(
                 @QueryParameter int value) throws IOException, ServletException {
             if (value < 1) {
-                return FormValidation.error(Constants.FORMVALIDATION_DEADLINES);
+                return FormValidation.error(Messages.errorMessageFormValidationDeadline());
             }
             return FormValidation.ok();
         }
@@ -279,7 +302,7 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
         public FormValidation doCheckGlobalLastManuallyTriggered(
                 @QueryParameter int value) throws IOException, ServletException {
             if (value < 1) {
-                return FormValidation.error(Constants.FORMVALIDATION_DEADLINES);
+                return FormValidation.error(Messages.errorMessageFormValidationDeadline());
             }
             return FormValidation.ok();
         }
@@ -292,7 +315,8 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
 
             return true;
         }
-
+            
+        
         /**
          * Safes global configuration.
          */
@@ -375,7 +399,7 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
          * This human readable name is used in the configuration screen.
          */
         public String getDisplayName() {
-            return "Failed Job Deactivator";
+            return Messages.displayName();
         }
 
         /**

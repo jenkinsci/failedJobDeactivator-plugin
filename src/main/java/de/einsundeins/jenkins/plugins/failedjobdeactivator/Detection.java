@@ -252,13 +252,16 @@ public class Detection {
         if (job.getLastBuild() == null) {
             deadline = getDeadlineLastSuccessfulBuild(property);
 
-            if (!isInDeadline(job.getBuildDir().lastModified(), deadline)) {
+            if ((property != null && property.getDateOfFirstJobConfiguration() > 0 
+            		&& !isInDeadline(property.getDateOfFirstJobConfiguration(), deadline)) 
+            		|| !isInDeadline(job.getBuildDir().lastModified(), deadline)) {
+            	
                 if (this.descriptor != null) {
                     setDetectedJob(job, "Job has never been built.",
                             this.descriptor.getDeleteNeverBuiltJobs(),
                             0, null);
                 } else {
-                    setDetectedJob(job, "Job has never been built.", true,
+                    setDetectedJob(job, "Job has never been built.", Constants.DELETE_NEVER_BUILT_JOBS_DEFAULT,
                             0, null);
                 }
 
@@ -413,7 +416,7 @@ public class Detection {
      * @return true, if within the deadline; else false.
      */
     private boolean isInDeadline(long timestamp, long deadline){
-        
+            	
         if((this.systemtime - timestamp) < deadline){
             return true;
         }
