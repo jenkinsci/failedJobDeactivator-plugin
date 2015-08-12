@@ -80,19 +80,14 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
      * Job already configured for plugin?
      */
     private boolean isConfigured;
-    
-    /**
-     * Timestamp of the first job configuration.
-     */
-    private long dateOfFirstJobConfiguration;
-    
+        
 
     /**
      * Default DataBoundConstructor.
      * @param optionalBlock
      */
     @DataBoundConstructor
-    public FailedJobDeactivator(LocalValues optionalBlock, long dateOfFirstJobConfiguration) {
+    public FailedJobDeactivator(LocalValues optionalBlock) {
 
         if (optionalBlock != null) {
             this.active = optionalBlock.active;
@@ -103,14 +98,7 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
         } else {
             this.active = true;
             this.isConfigured = false;
-        }
-                      
-        if(dateOfFirstJobConfiguration <= 0L){
-        	this.dateOfFirstJobConfiguration = System.currentTimeMillis();
-        }else{
-        	this.dateOfFirstJobConfiguration = dateOfFirstJobConfiguration;
-        }
-                
+        }               
     }
 
     /**
@@ -155,16 +143,7 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
      */
     public boolean getIsConfigured() {
         return this.isConfigured;
-    }
-    
-    /**
-     * 
-     * @return Timestamp of the first job configuration.
-     */
-    public long getDateOfFirstJobConfiguration(){
-    	return this.dateOfFirstJobConfiguration;
-    }
-    
+    }   
 
     /**
      * Descriptor for {@link FailedJobDeactivator}.

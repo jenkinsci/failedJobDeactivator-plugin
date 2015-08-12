@@ -55,7 +55,7 @@ public class ConfigurationTest {
         
         FailedJobDeactivator.LocalValues localdataTest = new FailedJobDeactivator.LocalValues
                 (active,lastManuallyTriggered, lastSuccessfulBuild,userNotification);
-        FailedJobDeactivator test = new FailedJobDeactivator(localdataTest, 0);
+        FailedJobDeactivator test = new FailedJobDeactivator(localdataTest);
         
         assertEquals(active,test.getActive());
         assertEquals(lastSuccessfulBuild,test.getLastSuccessfulBuild());
@@ -67,7 +67,7 @@ public class ConfigurationTest {
     @Test
     public void testJobConfig2() throws Exception {
         
-        FailedJobDeactivator test = new FailedJobDeactivator(null, 0);
+        FailedJobDeactivator test = new FailedJobDeactivator(null);
         
         assertEquals(false,test.getIsConfigured());
         assertEquals(true,test.getActive());
