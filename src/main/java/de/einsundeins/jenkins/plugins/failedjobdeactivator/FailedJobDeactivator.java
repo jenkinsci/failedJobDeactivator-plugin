@@ -80,7 +80,7 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
      * Job already configured for plugin?
      */
     private boolean isConfigured;
-        
+            
 
     /**
      * Default DataBoundConstructor.
@@ -98,7 +98,7 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
         } else {
             this.active = true;
             this.isConfigured = false;
-        }               
+        }
     }
 
     /**
@@ -143,8 +143,8 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
      */
     public boolean getIsConfigured() {
         return this.isConfigured;
-    }   
-
+    }
+        
     /**
      * Descriptor for {@link FailedJobDeactivator}.
      */
@@ -465,7 +465,6 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
 
             return Constants.LASTSUCCESSFULBUILD_DEFAULT;
         }
-
 
         /**
          * Getter for frontend generation of configured job handling.

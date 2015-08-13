@@ -35,9 +35,13 @@ import javax.servlet.ServletException;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+
+import de.einsundeins.jenkins.plugins.failedjobdeactivator.FailedJobDeactivator.DescriptorImpl;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import hudson.Plugin;
+import hudson.model.AbstractProject;
 
 /**
  * Main class for the plugin. Containing all logic (except configuration).
@@ -75,15 +79,19 @@ public class FailedJobDeactivatorImpl extends Plugin {
 
         rsp.sendRedirect("showDetectedJobs");
 
-        startDetection();
+        try {
+            startDetection(req.getSubmittedForm());
+        } catch (ServletException e) {
+            logger.log(WARNING, "Failed to get submitted form! " + e);
+        }
 
     }
 
     /**
      * Starts detection
      */
-    private void startDetection() {
-        detection = new Detection();
+    private void startDetection(JSONObject submittedForm) {
+        detection = new Detection(submittedForm);
         detection.startDetection();
     }
 
@@ -94,6 +102,26 @@ public class FailedJobDeactivatorImpl extends Plugin {
     public List<DetectedJob> getDetectedJobs() {
 
         return detection.getDetectedJobs();
+    }
+    
+    /**
+     * 
+     * @return
+     *      global configuration.
+     */
+    public FailedJobDeactivator.DescriptorImpl getDescriptor(){
+        return (DescriptorImpl) Jenkins.getInstance().getDescriptor(
+                FailedJobDeactivator.class);
+    }
+    
+    /**
+     * 
+     * @param aProject
+     * @return job property
+     */
+    public FailedJobDeactivator getProperty(AbstractProject<?, ?> aProject){
+        return (FailedJobDeactivator) aProject
+                .getProperty(FailedJobDeactivator.class);
     }
 
     /**

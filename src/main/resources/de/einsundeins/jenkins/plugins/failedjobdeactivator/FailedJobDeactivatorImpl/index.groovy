@@ -37,7 +37,6 @@ import lib.LayoutTagLib
 import de.einsundeins.jenkins.plugins.failedjobdeactivator.FailedJobDeactivatorImpl
 
 def l=namespace(LayoutTagLib.class)
-//def myRootURL = Hudson.getInstance().getRootUrlFromRequest()
 
 l.layout(title: _("Failed Job Deactivator"), secured: "true") {
 	
@@ -50,11 +49,40 @@ l.layout(title: _("Failed Job Deactivator"), secured: "true") {
 	l.main_panel() {
 		h1(_("Failed Job Deactivator"))
 		
-		//p() {
-			f.form(action: "startDetection") {
+		f.form(action: "startDetection") {
+		
+			if(my.getDescriptor() != null){
+
+				f.entry(title:_("Delete never built jobs"), field:"deleteNeverBuiltJobs"){
+					f.checkbox(checked: my.getDescriptor().getDeleteNeverBuiltJobs())
+				}
+		
+				f.entry(title:_("Deadline of last successful build"), field:"globalLastSuccessfulBuild"){
+     				f.textbox(default:my.getDescriptor().getGlobalLastSuccessfulBuild())
+     			}
+  
+  				f.entry(title:_("Deadline of last manual triggered build"), field:"globalLastManuallyTriggered"){
+  					f.textbox(default:my.getDescriptor().getGlobalLastManuallyTriggered())
+  				}
+				
+			}
+		
+			f.entry(title:_("Also show deactivated jobs"), field:"showDeactivatedJobs"){
+				f.checkbox(default:"false")
+			}
+			
+			f.entry(title:_("Also show excluded jobs"), field:"showExcludedJobs"){
+				f.checkbox(default:"false")
+			}
+			
+			f.entry(title:_("Ignore individual deadlines in job config"), field:"forceGlobalDeadlines"){
+				f.checkbox(default:"false")
+			}
+			
+			f.entry(){
 				f.submit(value:_("Start detection"))
 			}
-		//}
+		}
 	}
 	
 }

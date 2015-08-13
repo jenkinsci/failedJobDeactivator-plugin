@@ -61,7 +61,9 @@ l.layout(title: _("Failed Job Deactivator"), secured: "true") {
 				def i = 0		
 				def j = 0
 		
-				table(border:"1px", class:"pane sortable") {
+		
+				adjunct "de.einsundeins.jenkins.plugins.failedjobdeactivator.FailedJobDeactivatorImpl.table"
+				table(id:"showDetectedJobs", border:"1px", class:"pane sortable") {
 					thead() {
 						tr(){
 							th(class:"pane-header") {
@@ -78,6 +80,9 @@ l.layout(title: _("Failed Job Deactivator"), secured: "true") {
 							}
 							th(class:"pane-header") {
 								text(_("Handling"))
+							}
+							th(class:"pane-header") {
+								text(_("Further information"))
 							}
 						}
 					}
@@ -100,13 +105,21 @@ l.layout(title: _("Failed Job Deactivator"), secured: "true") {
 									text(my.getDetectedJobs().get(i).getResultOfLastBuild())
 								}
 								td(align:"left"){
-									//text(_(my.getDetectedJobs().get(i).isDeleteJob().toString()))
 										def config = my.getDetectedJobs().get(i).isDeleteJob()
 										select(name:"handleJob"){
 											f.option(value: "Deactivate", selected:(config == false), _("Deactivate"))
 											f.option(value: "Delete", selected:(config == true), _("Delete"))
 											f.option(value: "Ignore", selected:false, _("Ignore")) //For future features
 										}
+								}
+								td(align:"left"){
+									text(_("Deactivated")+ ": " + _(my.getDetectedJobs().get(i).getaProject().isDisabled().toString()))
+									br()
+									
+									def property = my.getProperty(my.getDetectedJobs().get(i).getaProject())
+									if(property != null){
+									   text(_("Plugin active")+": " + _(property.getActive().toString()))
+									}
 								}
 							}
 	
@@ -116,8 +129,10 @@ l.layout(title: _("Failed Job Deactivator"), secured: "true") {
 			
 			
 				}
-			
-				f.submit(value:_("Start handling jobs"))
+				
+				f.entry(){
+					f.submit(value:_("Start handling jobs"))
+				}
 			}
 		}
 	}
