@@ -252,8 +252,7 @@ public class Detection {
         if (job.getLastBuild() == null) {
             deadline = getDeadlineLastSuccessfulBuild(property);
 
-            if ((property != null) 
-            		|| !isInDeadline(job.getBuildDir().lastModified(), deadline)) {
+            if (!isInDeadline(job.getBuildDir().lastModified(), deadline)) {
             	
                 if (this.descriptor != null) {
                     setDetectedJob(job, "Job has never been built.",
