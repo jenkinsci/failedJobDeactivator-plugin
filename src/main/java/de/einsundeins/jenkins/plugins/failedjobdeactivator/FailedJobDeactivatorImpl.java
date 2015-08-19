@@ -29,15 +29,11 @@ import static java.util.logging.Level.WARNING;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import java.nio.file.Files;
 
 import javax.servlet.ServletException;
-import javax.swing.JFileChooser;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
