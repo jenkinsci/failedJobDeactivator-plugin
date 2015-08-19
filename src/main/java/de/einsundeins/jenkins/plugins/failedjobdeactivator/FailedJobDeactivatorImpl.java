@@ -26,12 +26,18 @@ package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
 import static java.util.logging.Level.WARNING;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.nio.file.Files;
 
 import javax.servlet.ServletException;
+import javax.swing.JFileChooser;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -55,7 +61,7 @@ public class FailedJobDeactivatorImpl extends Plugin {
      */
     private Detection detection;
     
-    private List<DetectedJob> dj;
+    private List<DetectedJob> detectedJobs;
     
     private Logger logger = Logger.getLogger(FailedJobDeactivatorImpl.class
             .getName());
@@ -86,7 +92,7 @@ public class FailedJobDeactivatorImpl extends Plugin {
         }
 
     }
-
+    
     /**
      * Starts detection
      */
@@ -129,30 +135,34 @@ public class FailedJobDeactivatorImpl extends Plugin {
      * @param req
      * @param rsp
      * @throws IOException
+     * @throws ServletException 
      */
     public void doHandleJobs(StaplerRequest req, StaplerResponse rsp)
-            throws IOException {
-
-        rsp.sendRedirect("");
-                        
-        try {
-            this.dj = new ArrayList<DetectedJob>();
-            reconfigureJobHandling(req.getSubmittedForm().get("handleJob"));
-        } catch (ServletException e) {
-            logger.log(WARNING, "Failed to get submitted form! " + e);
-        }
-             
-        if(dj.size() != 0){
+            throws IOException, ServletException {
+                
+        if(req.getParameterMap().containsKey("exportCSV")){
+            doExportCSV(req, rsp);
+        }else{  
             
-            Notification notification = new Notification();
-            notification.doNotification(dj);
+            rsp.sendRedirect("");
+            try {
+                this.detectedJobs = new ArrayList<DetectedJob>();
+                reconfigureJobHandling(req.getSubmittedForm().get("handleJob"));
+            } catch (ServletException e) {
+                logger.log(WARNING, "Failed to get submitted form! " + e);
+            }
+            
+            if(detectedJobs.size() != 0){
+                
+                Notification notification = new Notification();
+                notification.doNotification(detectedJobs);
+            
+                HandleAction handleAction = new HandleAction();
+                handleAction.handleJobs(detectedJobs);
         
-            HandleAction handleAction = new HandleAction();
-            handleAction.handleJobs(dj);
-        
+            }             
+            detection.clearLists();
         }
-
-        detection.clearLists();
     }
     
     /**
@@ -161,22 +171,66 @@ public class FailedJobDeactivatorImpl extends Plugin {
      */
     private void reconfigureJobHandling(Object jobHandling){
         
-        JSONArray js = (JSONArray)jobHandling;
+        JSONArray jobHandlingJson = (JSONArray)jobHandling;
       
-        if(detection.getDetectedJobs().size() != js.size()){
+        if(detection.getDetectedJobs().size() != jobHandlingJson.size()){
             logger.log(WARNING, "Could not perform job handling. Invalid size of detected jobs and configuration. Try again!");
         }else{
             for(int i = 0; i < detection.getDetectedJobs().size(); i++){
                                 
-                if(js.get(i).equals("Delete")){
-                    dj.add(detection.getDetectedJobs().get(i));
-                    dj.get(dj.size()-1).setDeleteJob(true);
-                }else if(js.get(i).equals("Deactivate")){
-                    dj.add(detection.getDetectedJobs().get(i));
-                    dj.get(dj.size()-1).setDeleteJob(false);
+                if(jobHandlingJson.get(i).equals("Delete")){
+                    detectedJobs.add(detection.getDetectedJobs().get(i));
+                    detectedJobs.get(detectedJobs.size()-1).setDeleteJob(true);
+                }else if(jobHandlingJson.get(i).equals("Deactivate")){
+                    detectedJobs.add(detection.getDetectedJobs().get(i));
+                    detectedJobs.get(detectedJobs.size()-1).setDeleteJob(false);
                 }
             }
         }
     }
+    
+    public void doExportCSV(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException{
+        
+        File folder = new File("exports/");
+        if (!folder.exists() || !folder.isDirectory()) {
+            folder.mkdir();
+            System.out.println("Verzeichnis erstellt.");
+        }
+                        
+        FileWriter writer = new FileWriter("exports/detectedJobs.csv");
+        writer.append("Projectname,");
+        writer.append("Failure causes,");
+        writer.append("Days since last build,");
+        writer.append("Result of last build,");
+        writer.append("Job handling,");
+        writer.append("Further information");
+        writer.append('\n');
+                
+        JSONArray jobHandlingJson = (JSONArray)req.getSubmittedForm().get("handleJob");
+        
+        if(detection.getDetectedJobs().size() != jobHandlingJson.size()){
+            logger.log(WARNING, "Could not perform CSV export. Invalid size of detected jobs and configuration. Try again!");
+        }else{
+            for(int i = 0; i < detection.getDetectedJobs().size(); i++){
+                
+                writer.append(detection.getDetectedJobs().get(i).getaProject().getFullName()+",");
+                writer.append(detection.getDetectedJobs().get(i).getFailureCause()+",");
+                writer.append(detection.getDetectedJobs().get(i).getTimeOfLastBuild()+",");
+                writer.append(detection.getDetectedJobs().get(i).getResultOfLastBuild()+",");
+                writer.append(jobHandlingJson.get(i)+",");
+                writer.append("Deactivated: " + detection.getDetectedJobs().get(i).getaProject().isDisabled()+"<br />");
+                if(detection.getDetectedJobs().get(i).getaProject().getProperty(FailedJobDeactivator.class)!=null){
+                    writer.append("Plugin active: " + detection.getDetectedJobs().get(i).getaProject().getProperty(FailedJobDeactivator.class).getActive());
+                }
+                writer.append('\n');
+            }
+        }
+          
+      writer.flush();
+      writer.close();
+            
+      rsp.setHeader("Content-Type", "text/csv");
+      rsp.serveFile(req, new File("exports/detectedJobs.csv").toURI().toURL());
+  }
 
 }

@@ -91,7 +91,7 @@ l.layout(title: _("Failed Job Deactivator"), secured: "true") {
 					tbody(){
 						while(i < my.getDetectedJobs().size()){
 							tr(){
-								td(align:"left") {							
+								td(align:"left") {
 									a(href:"${rootURL}/${my.getDetectedJobs().get(i).getaProject().getUrl()}", 
 									my.getDetectedJobs().get(i).getaProject().getFullName())
 								}
@@ -130,8 +130,14 @@ l.layout(title: _("Failed Job Deactivator"), secured: "true") {
 			
 				}
 				
+				br()
+				
 				f.entry(){
-					f.submit(value:_("Start handling jobs"))
+					f.submit(name:"handling", value:_("Start handling jobs"))
+				}
+				
+				f.entry(){
+					f.submit(name:"exportCSV", value:_("Export as CSV"))
 				}
 			}
 		}
