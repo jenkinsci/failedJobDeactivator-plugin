@@ -69,6 +69,11 @@
       <artifactId>mailer</artifactId>
       <version>1.15</version>
     </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.plugins</groupId>
+      <artifactId>jobConfigHistory</artifactId>
+      <version>2.12</version>
+    </dependency>
   </dependencies>
 
 
