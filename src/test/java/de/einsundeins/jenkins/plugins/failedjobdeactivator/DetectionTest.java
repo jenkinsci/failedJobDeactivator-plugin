@@ -69,6 +69,7 @@ public class DetectionTest {
         detectionConfiguration.accumulate("forceGlobalDeadlines", false);
         detectionConfiguration.accumulate("globalLastSuccessfulBuild", 28);
         detectionConfiguration.accumulate("globalLastManuallyTriggered", 14);
+        detectionConfiguration.accumulate("countOfLastUsersToGetNotified", 10);
                 
         Detection detection = new Detection(detectionConfiguration);
         
@@ -108,6 +109,7 @@ public class DetectionTest {
         detectionConfiguration.accumulate("forceGlobalDeadlines", false);
         detectionConfiguration.accumulate("globalLastSuccessfulBuild", 28);
         detectionConfiguration.accumulate("globalLastManuallyTriggered", 14);
+        detectionConfiguration.accumulate("countOfLastUsersToGetNotified", 10);
         
         Detection detection = new Detection(detectionConfiguration);
         
@@ -136,6 +138,7 @@ public class DetectionTest {
         configure.accumulate("deleteJobsWithoutFailureCauses", false);
         configure.accumulate("globalLastManuallyTriggered", globalLastManuallyTriggered);
         configure.accumulate("globalLastSuccessfulBuild", globalLastSuccessfulBuild);
+        configure.accumulate("countOfLastUsersToGetNotified", 10);
         descriptor.configure(null, configure);
         
         JSONObject detectionConfiguration = new JSONObject();
@@ -145,6 +148,7 @@ public class DetectionTest {
         detectionConfiguration.accumulate("forceGlobalDeadlines", false);
         detectionConfiguration.accumulate("globalLastSuccessfulBuild", descriptor.getGlobalLastSuccessfulBuild());
         detectionConfiguration.accumulate("globalLastManuallyTriggered", descriptor.getGlobalLastManuallyTriggered());
+        detectionConfiguration.accumulate("countOfLastUsersToGetNotified", 10);
         
         Detection detection = new Detection(detectionConfiguration);
         
@@ -171,6 +175,7 @@ public class DetectionTest {
         configure.accumulate("deleteJobsWithoutFailureCauses", false);
         configure.accumulate("globalLastManuallyTriggered", globalLastManuallyTriggered);
         configure.accumulate("globalLastSuccessfulBuild", globalLastSuccessfulBuild);
+        configure.accumulate("countOfLastUsersToGetNotified", 10);
         descriptor.configure(null, configure);
         
 
@@ -190,6 +195,7 @@ public class DetectionTest {
         detectionConfiguration.accumulate("forceGlobalDeadlines", false);
         detectionConfiguration.accumulate("globalLastSuccessfulBuild", descriptor.getGlobalLastSuccessfulBuild());
         detectionConfiguration.accumulate("globalLastManuallyTriggered", descriptor.getGlobalLastManuallyTriggered());
+        detectionConfiguration.accumulate("countOfLastUsersToGetNotified", 10);
         
         Detection detection = new Detection(detectionConfiguration);        
         assertEquals(lastManuallyTriggered*Constants.DAYS_TO_64BIT_UNIXTIME, detection.testGetDeadlineLastManuallyTriggered(test));
@@ -217,6 +223,7 @@ public class DetectionTest {
         configure.accumulate("deleteJobsWithoutFailureCauses", false);
         configure.accumulate("globalLastManuallyTriggered", globalLastManuallyTriggered);
         configure.accumulate("globalLastSuccessfulBuild", globalLastSuccessfulBuild);
+        configure.accumulate("countOfLastUsersToGetNotified", 10);
         descriptor.configure(null, configure);
         
         AbstractProject<?,?> testProject = (AbstractProject<?,?>)j.getInstance().getItem("Test5_hasNeverBeenBuildSuccessfully");
@@ -231,6 +238,7 @@ public class DetectionTest {
         detectionConfiguration.accumulate("forceGlobalDeadlines", false);
         detectionConfiguration.accumulate("globalLastSuccessfulBuild", descriptor.getGlobalLastSuccessfulBuild());
         detectionConfiguration.accumulate("globalLastManuallyTriggered", descriptor.getGlobalLastManuallyTriggered());
+        detectionConfiguration.accumulate("countOfLastUsersToGetNotified", 10);
         
         Detection detection = new Detection(detectionConfiguration);
         detection.testCheckHasNeverRunnedSuccessfully(testProject,property);
@@ -249,6 +257,7 @@ public class DetectionTest {
         configure2.accumulate("deleteJobsWithoutFailureCauses", true);
         configure2.accumulate("globalLastManuallyTriggered", globalLastManuallyTriggered);
         configure2.accumulate("globalLastSuccessfulBuild", globalLastSuccessfulBuild);
+        configure2.accumulate("countOfLastUsersToGetNotified", 10);
         descriptor.configure(null, configure2);
         
         detection.testCheckHasNeverRunnedSuccessfully(testProject,property);
@@ -282,6 +291,7 @@ public class DetectionTest {
         configure.accumulate("deleteJobsWithoutFailureCauses", false);
         configure.accumulate("globalLastManuallyTriggered", globalLastManuallyTriggered);
         configure.accumulate("globalLastSuccessfulBuild", globalLastSuccessfulBuild);
+        configure.accumulate("countOfLastUsersToGetNotified", 10);
         descriptor.configure(null, configure);
                
         FailedJobDeactivator property = (FailedJobDeactivator) testProject
@@ -294,6 +304,7 @@ public class DetectionTest {
         detectionConfiguration.accumulate("forceGlobalDeadlines", false);
         detectionConfiguration.accumulate("globalLastSuccessfulBuild", descriptor.getGlobalLastSuccessfulBuild());
         detectionConfiguration.accumulate("globalLastManuallyTriggered", descriptor.getGlobalLastManuallyTriggered());
+        detectionConfiguration.accumulate("countOfLastUsersToGetNotified", 10);
         
         Detection detection = new Detection(detectionConfiguration);
         detection.testCheckLastSuccessfulBuildTooLongAgo(testProject,property);
@@ -311,6 +322,7 @@ public class DetectionTest {
         configure2.accumulate("deleteJobsWithoutFailureCauses", true);
         configure2.accumulate("globalLastManuallyTriggered", Integer.MAX_VALUE);
         configure2.accumulate("globalLastSuccessfulBuild", Integer.MAX_VALUE);
+        configure2.accumulate("countOfLastUsersToGetNotified", 10);
         descriptor.configure(null, configure2);
         
         detection.testCheckHasNeverRunnedSuccessfully(testProject,property);
@@ -345,6 +357,7 @@ public class DetectionTest {
         configure.accumulate("globalLastSuccessfulBuild", globalLastSuccessfulBuild);
         configure.accumulate("failureCauseId", failureCause);
         configure.accumulate("deleteJob", deleteJob);
+        configure.accumulate("countOfLastUsersToGetNotified", 10);
         descriptor.configure(null, configure);
         
         JSONObject detectionConfiguration = new JSONObject();
@@ -354,6 +367,7 @@ public class DetectionTest {
         detectionConfiguration.accumulate("forceGlobalDeadlines", false);
         detectionConfiguration.accumulate("globalLastSuccessfulBuild", descriptor.getGlobalLastSuccessfulBuild());
         detectionConfiguration.accumulate("globalLastManuallyTriggered", descriptor.getGlobalLastManuallyTriggered());
+        detectionConfiguration.accumulate("countOfLastUsersToGetNotified", 10);
         
         Detection detection = new Detection(detectionConfiguration);
         detection.testCheckLastSuccessfulBuildTooLongAgo(testProject,property);
@@ -379,6 +393,7 @@ public class DetectionTest {
         configure2.accumulate("globalLastSuccessfulBuild", globalLastSuccessfulBuild);
         configure2.accumulate("failureCauseId", failureCause);
         configure2.accumulate("deleteJob", deleteJob);
+        configure2.accumulate("countOfLastUsersToGetNotified", 10);
         descriptor.configure(null, configure2);
                       
         detection = new Detection(detectionConfiguration);
@@ -408,6 +423,7 @@ public class DetectionTest {
         configure.accumulate("deleteJobsWithoutFailureCauses", true);
         configure.accumulate("globalLastManuallyTriggered", globalLastManuallyTriggered);
         configure.accumulate("globalLastSuccessfulBuild", globalLastSuccessfulBuild);
+        configure.accumulate("countOfLastUsersToGetNotified", 10);
         descriptor.configure(null, configure);
                     
         JSONObject detectionConfiguration = new JSONObject();
@@ -417,6 +433,7 @@ public class DetectionTest {
         detectionConfiguration.accumulate("forceGlobalDeadlines", false);
         detectionConfiguration.accumulate("globalLastSuccessfulBuild", descriptor.getGlobalLastSuccessfulBuild());
         detectionConfiguration.accumulate("globalLastManuallyTriggered", descriptor.getGlobalLastManuallyTriggered());
+        detectionConfiguration.accumulate("countOfLastUsersToGetNotified", 10);
         
         Detection detection = new Detection(detectionConfiguration);
         detection.startDetection();

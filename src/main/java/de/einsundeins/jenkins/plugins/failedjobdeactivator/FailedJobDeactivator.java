@@ -189,6 +189,12 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
          */
         private int globalLastManuallyTriggered;
         
+        /**
+         * 
+         * @return Global configuration of the count of last users to get notified.
+         */
+        private int countOfLastUsersToGetNotified;
+        
 
         /**
          * Loads the persisted global configuration.
@@ -285,6 +291,22 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
             }
             return FormValidation.ok();
         }
+        
+        /**
+         * Performs on-the-fly validation of the form field
+         * 'countOfLastUsersToGetNotified'.
+         * @param value
+         * @return
+         * @throws IOException
+         * @throws ServletException
+         */
+        public FormValidation doCheckCountOfLastUsersToGetNotified(
+                @QueryParameter int value) throws IOException, ServletException {
+            if (value < 1) {
+                return FormValidation.error(Messages.errorMessageFormValidationCountOfUsers());
+            }
+            return FormValidation.ok();
+        }
 
         /**
          * Indicates that this builder can be used with all kinds of project
@@ -308,6 +330,7 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
                     .getBoolean("deleteNeverBuiltJobs");
             this.deleteJobsWithoutFailureCauses = formData
                     .getBoolean("deleteJobsWithoutFailureCauses");
+            this.countOfLastUsersToGetNotified = formData.getInt("countOfLastUsersToGetNotified");
             Logger logger = Logger.getLogger(FailedJobDeactivator.class
                     .getName());
 
@@ -445,6 +468,19 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
                 return this.globalLastSuccessfulBuild;
             } else {
                 return Constants.LASTSUCCESSFULBUILD_DEFAULT;
+            }
+        }
+        
+        /**
+         * 
+         * @return Global configuration of the count of last users to get notified.
+         */
+        public int getCountOfLastUsersToGetNotified() {
+
+            if (this.countOfLastUsersToGetNotified > 0) {
+                return this.countOfLastUsersToGetNotified;
+            } else {
+                return Constants.NUMBER_OF_RESPONSIBLE_USERS;
             }
         }
         

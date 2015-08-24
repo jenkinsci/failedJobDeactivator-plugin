@@ -87,6 +87,7 @@ public class ConfigurationTest {
         boolean deleteJobsWithoutFailureCauses = false;
         int globalLastManuallyTriggered = 14;
         int globalLastSuccessfulBuild = 28;
+        int countOfLastUsersToGetNotified = 10;
         
         JSONObject configure = new JSONObject();
         configure.accumulate("adminNotification", adminNotification);
@@ -94,6 +95,7 @@ public class ConfigurationTest {
         configure.accumulate("deleteJobsWithoutFailureCauses", deleteJobsWithoutFailureCauses);
         configure.accumulate("globalLastManuallyTriggered", globalLastManuallyTriggered);
         configure.accumulate("globalLastSuccessfulBuild", globalLastSuccessfulBuild);
+        configure.accumulate("countOfLastUsersToGetNotified", countOfLastUsersToGetNotified);
         
         descriptor.configure(null, configure);
         
@@ -102,6 +104,7 @@ public class ConfigurationTest {
         assertEquals(deleteJobsWithoutFailureCauses,descriptor.getDeleteJobsWithoutFailureCauses());
         assertEquals(globalLastManuallyTriggered,descriptor.getGlobalLastManuallyTriggered());
         assertEquals(globalLastSuccessfulBuild,descriptor.getGlobalLastSuccessfulBuild());
+        assertEquals(countOfLastUsersToGetNotified,descriptor.getCountOfLastUsersToGetNotified());
     }
     
     @Test
@@ -115,6 +118,7 @@ public class ConfigurationTest {
         boolean deleteJobsWithoutFailureCauses = true;
         int globalLastManuallyTriggered = -1;
         int globalLastSuccessfulBuild = 0;
+        int countOfLastUsersToGetNotified = 0;
         
         JSONObject configure = new JSONObject();
         configure.accumulate("adminNotification", adminNotification);
@@ -122,6 +126,7 @@ public class ConfigurationTest {
         configure.accumulate("deleteJobsWithoutFailureCauses", deleteJobsWithoutFailureCauses);
         configure.accumulate("globalLastManuallyTriggered", globalLastManuallyTriggered);
         configure.accumulate("globalLastSuccessfulBuild", globalLastSuccessfulBuild);
+        configure.accumulate("countOfLastUsersToGetNotified", countOfLastUsersToGetNotified);
         
         descriptor.configure(null, configure);
         
@@ -130,5 +135,6 @@ public class ConfigurationTest {
         assertEquals(deleteJobsWithoutFailureCauses,descriptor.getDeleteJobsWithoutFailureCauses());
         assertEquals(Constants.LASTMANUALLYTRIGGERED_DEFAULT,descriptor.getGlobalLastManuallyTriggered());
         assertEquals(Constants.LASTSUCCESSFULBUILD_DEFAULT,descriptor.getGlobalLastSuccessfulBuild());
+        assertEquals(Constants.NUMBER_OF_RESPONSIBLE_USERS,descriptor.getCountOfLastUsersToGetNotified());
     }
 }

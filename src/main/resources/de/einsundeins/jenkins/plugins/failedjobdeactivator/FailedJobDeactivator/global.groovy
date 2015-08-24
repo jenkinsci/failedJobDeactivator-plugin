@@ -57,6 +57,10 @@ import lib.LayoutTagLib
   				description:_("Value in days. Default value is")+" "+ descriptor.getDefaultGlobalLastManuallyTriggered() + "."){
   			f.textbox()
   		}
+  		
+  		f.entry(title:_("Count of last users to get notified"), field:"countOfLastUsersToGetNotified"){
+  			f.textbox()
+  		}
   						
 		
 		f.advanced(title:_("Failure Causes")){

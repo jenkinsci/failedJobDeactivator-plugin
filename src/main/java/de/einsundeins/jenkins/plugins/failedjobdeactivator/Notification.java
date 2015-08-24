@@ -91,6 +91,8 @@ public class Notification {
      */
     private Session session;
     
+    private FailedJobDeactivator.DescriptorImpl descriptor;
+    
     /**
      * Default constructor.
      */
@@ -169,7 +171,7 @@ public class Notification {
 
         FailedJobDeactivator property = (FailedJobDeactivator) detectedJob.getaProject()
                 .getProperty(FailedJobDeactivator.class);
-        FailedJobDeactivator.DescriptorImpl descriptor = (DescriptorImpl) Jenkins
+        descriptor = (DescriptorImpl) Jenkins
                 .getInstance().getDescriptor(FailedJobDeactivator.class);
 
         MimeMessage msg = new MimeMessage(session);
@@ -226,13 +228,16 @@ public class Notification {
         JobConfigHistoryProjectAction historyconfig = new JobConfigHistoryProjectAction(project);
         String responsibleUserId = null;
         String userAddress = null;
+        LinkedList<String> responsibleUsers = new LinkedList<String>();
         
-        LinkedList<String> responsibleUsers = new LinkedList<String>(); //For future
         try {
             if(historyconfig.getJobConfigs().size()>0){
                 
+                int countOfLastUsersToGetNotified = descriptor.getCountOfLastUsersToGetNotified() > 0 
+                        ? descriptor.getCountOfLastUsersToGetNotified() : Constants.NUMBER_OF_RESPONSIBLE_USERS;
+                
                 int i = 0;
-                while(i<10 && i<historyconfig.getJobConfigs().size()){
+                while(i<countOfLastUsersToGetNotified && i<historyconfig.getJobConfigs().size()){
                     responsibleUserId = historyconfig.getJobConfigs().get(i).getUserID();
                     if(!responsibleUserId.contains("anonymous")){
                         userAddress = Jenkins.getInstance().getUser(responsibleUserId).getProperty(Mailer.UserProperty.class).getAddress();
