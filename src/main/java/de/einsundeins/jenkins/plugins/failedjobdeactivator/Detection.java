@@ -112,36 +112,39 @@ public class Detection {
         // Get all jobs
         for (Item project : Jenkins.getInstance().getAllItems()) {
             
-            aProject = (AbstractProject<?, ?>) project;
-            property = (FailedJobDeactivator) aProject
-                    .getProperty(FailedJobDeactivator.class);
-            jobDetected = false;
+            if (project instanceof AbstractProject){
             
-            boolean detectionPreparationProject = (aProject != null) && (aProject instanceof TopLevelItem);
-            boolean detectionPreparationDeactivatedJobs = detectionConfiguration.getBoolean("showDeactivatedJobs") || !aProject.isDisabled();
-            boolean detectionPreparationProperty = ((property == null) 
+                aProject = (AbstractProject<?, ?>) project;
+                property = (FailedJobDeactivator) aProject
+                    .getProperty(FailedJobDeactivator.class);
+                jobDetected = false;
+            
+                boolean detectionPreparationProject = (aProject != null) && (aProject instanceof TopLevelItem);
+                boolean detectionPreparationDeactivatedJobs = detectionConfiguration.getBoolean("showDeactivatedJobs") || !aProject.isDisabled();
+                boolean detectionPreparationProperty = ((property == null) 
                     || detectionConfiguration.getBoolean("showExcludedJobs") 
                     || (property.getActive()));
 
-            // Check if detection is active for job and job is not disabled
-              if (detectionPreparationProject
+                // Check if detection is active for job and job is not disabled
+                if (detectionPreparationProject
                     && detectionPreparationDeactivatedJobs
                     && detectionPreparationProperty) {
                 
-                // Check if Job has never been runned.
-                jobDetected = checkHasNeverRunned(aProject, property);
+                    // Check if Job has never been runned.
+                    jobDetected = checkHasNeverRunned(aProject, property);
 
-                // Check if Job has never been runned successfully.
-                if (!jobDetected) {
-                    jobDetected = checkHasNeverRunnedSuccessfully(aProject,
+                    // Check if Job has never been runned successfully.
+                    if (!jobDetected) {
+                        jobDetected = checkHasNeverRunnedSuccessfully(aProject,
                             property);
-                }
+                    }
 
-                // Check if lastSuccessfulBuild too long ago
-                if (!jobDetected) {
-                    jobDetected = checkLastSuccessfulBuildTooLongAgo(aProject, property);
-                }
+                    // Check if lastSuccessfulBuild too long ago
+                    if (!jobDetected) {
+                        jobDetected = checkLastSuccessfulBuildTooLongAgo(aProject, property);
+                    }
 
+                }
             }
         }
         
