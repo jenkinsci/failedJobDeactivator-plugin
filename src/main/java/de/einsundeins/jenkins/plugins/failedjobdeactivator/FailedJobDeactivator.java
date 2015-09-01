@@ -80,19 +80,14 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
      * Job already configured for plugin?
      */
     private boolean isConfigured;
-    
-    /**
-     * Timestamp of the first job configuration.
-     */
-    private long dateOfFirstJobConfiguration;
-    
+            
 
     /**
      * Default DataBoundConstructor.
      * @param optionalBlock
      */
     @DataBoundConstructor
-    public FailedJobDeactivator(LocalValues optionalBlock, long dateOfFirstJobConfiguration) {
+    public FailedJobDeactivator(LocalValues optionalBlock) {
 
         if (optionalBlock != null) {
             this.active = optionalBlock.active;
@@ -104,13 +99,6 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
             this.active = true;
             this.isConfigured = false;
         }
-                      
-        if(dateOfFirstJobConfiguration <= 0L){
-        	this.dateOfFirstJobConfiguration = System.currentTimeMillis();
-        }else{
-        	this.dateOfFirstJobConfiguration = dateOfFirstJobConfiguration;
-        }
-                
     }
 
     /**
@@ -156,16 +144,7 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
     public boolean getIsConfigured() {
         return this.isConfigured;
     }
-    
-    /**
-     * 
-     * @return Timestamp of the first job configuration.
-     */
-    public long getDateOfFirstJobConfiguration(){
-    	return this.dateOfFirstJobConfiguration;
-    }
-    
-
+        
     /**
      * Descriptor for {@link FailedJobDeactivator}.
      */
@@ -209,6 +188,12 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
          * Global default deadline for the last manually triggered build.
          */
         private int globalLastManuallyTriggered;
+        
+        /**
+         * 
+         * @return Global configuration of the count of last users to get notified.
+         */
+        private int countOfLastUsersToGetNotified;
         
 
         /**
@@ -306,6 +291,22 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
             }
             return FormValidation.ok();
         }
+        
+        /**
+         * Performs on-the-fly validation of the form field
+         * 'countOfLastUsersToGetNotified'.
+         * @param value
+         * @return
+         * @throws IOException
+         * @throws ServletException
+         */
+        public FormValidation doCheckCountOfLastUsersToGetNotified(
+                @QueryParameter int value) throws IOException, ServletException {
+            if (value < 1) {
+                return FormValidation.error(Messages.errorMessageFormValidationCountOfUsers());
+            }
+            return FormValidation.ok();
+        }
 
         /**
          * Indicates that this builder can be used with all kinds of project
@@ -329,6 +330,7 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
                     .getBoolean("deleteNeverBuiltJobs");
             this.deleteJobsWithoutFailureCauses = formData
                     .getBoolean("deleteJobsWithoutFailureCauses");
+            this.countOfLastUsersToGetNotified = formData.getInt("countOfLastUsersToGetNotified");
             Logger logger = Logger.getLogger(FailedJobDeactivator.class
                     .getName());
 
@@ -471,6 +473,19 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
         
         /**
          * 
+         * @return Global configuration of the count of last users to get notified.
+         */
+        public int getCountOfLastUsersToGetNotified() {
+
+            if (this.countOfLastUsersToGetNotified > 0) {
+                return this.countOfLastUsersToGetNotified;
+            } else {
+                return Constants.NUMBER_OF_RESPONSIBLE_USERS;
+            }
+        }
+        
+        /**
+         * 
          * @return Default deadline of the last successful build.
          */
         public int getDefaultGlobalLastManuallyTriggered() {
@@ -486,7 +501,6 @@ public class FailedJobDeactivator extends JobProperty<Job<?, ?>> {
 
             return Constants.LASTSUCCESSFULBUILD_DEFAULT;
         }
-
 
         /**
          * Getter for frontend generation of configured job handling.

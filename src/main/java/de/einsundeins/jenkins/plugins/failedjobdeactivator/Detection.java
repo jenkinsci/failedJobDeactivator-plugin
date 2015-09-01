@@ -33,6 +33,7 @@ import com.sonyericsson.jenkins.plugins.bfa.model.FoundFailureCause;
 import com.sonyericsson.jenkins.plugins.bfa.model.FailureCauseBuildAction;
 
 import jenkins.model.Jenkins;
+import net.sf.json.JSONObject;
 import hudson.model.Item;
 import hudson.model.TopLevelItem;
 import hudson.model.AbstractBuild;
@@ -82,16 +83,23 @@ public class Detection {
      */
     private FailedJobDeactivator.DescriptorImpl descriptor;
     
+    /**
+     * Detection configuration from frontend.
+     */
+    private JSONObject detectionConfiguration;
+        
 
     /**
      * Default constructor
      */
-    public Detection() {
+    public Detection(JSONObject detectionConfiguration) {
 
-        detectedJobs = new ArrayList<DetectedJob>();
-        descriptor = (DescriptorImpl) Jenkins.getInstance().getDescriptor(
+        this.detectedJobs = new ArrayList<DetectedJob>();
+        this.descriptor = (DescriptorImpl) Jenkins.getInstance().getDescriptor(
                 FailedJobDeactivator.class);
-        systemtime = System.currentTimeMillis();
+        this.systemtime = System.currentTimeMillis();
+        
+        this.detectionConfiguration = detectionConfiguration;
     }
 
     /**
@@ -104,31 +112,39 @@ public class Detection {
         // Get all jobs
         for (Item project : Jenkins.getInstance().getAllItems()) {
             
-            aProject = (AbstractProject<?, ?>) project;
-            property = (FailedJobDeactivator) aProject
+            if (project instanceof AbstractProject){
+            
+                aProject = (AbstractProject<?, ?>) project;
+                property = (FailedJobDeactivator) aProject
                     .getProperty(FailedJobDeactivator.class);
-            jobDetected = false;
+                jobDetected = false;
+            
+                boolean detectionPreparationProject = (aProject != null) && (aProject instanceof TopLevelItem);
+                boolean detectionPreparationDeactivatedJobs = detectionConfiguration.getBoolean("showDeactivatedJobs") || !aProject.isDisabled();
+                boolean detectionPreparationProperty = ((property == null) 
+                    || detectionConfiguration.getBoolean("showExcludedJobs") 
+                    || (property.getActive()));
 
-            // Check if detection is active for job and job is not disabled
-            if ((aProject != null) && (aProject instanceof TopLevelItem)
-                    && (!aProject.isDisabled())
-                    && ((property == null) || ((property != null) && (property
-                            .getActive())))) {
+                // Check if detection is active for job and job is not disabled
+                if (detectionPreparationProject
+                    && detectionPreparationDeactivatedJobs
+                    && detectionPreparationProperty) {
                 
-                // Check if Job has never been runned.
-                jobDetected = checkHasNeverRunned(aProject, property);
+                    // Check if Job has never been runned.
+                    jobDetected = checkHasNeverRunned(aProject, property);
 
-                // Check if Job has never been runned successfully.
-                if (!jobDetected) {
-                    jobDetected = checkHasNeverRunnedSuccessfully(aProject,
+                    // Check if Job has never been runned successfully.
+                    if (!jobDetected) {
+                        jobDetected = checkHasNeverRunnedSuccessfully(aProject,
                             property);
-                }
+                    }
 
-                // Check if lastSuccessfulBuild too long ago
-                if (!jobDetected) {
-                    jobDetected = checkLastSuccessfulBuildTooLongAgo(aProject, property);
-                }
+                    // Check if lastSuccessfulBuild too long ago
+                    if (!jobDetected) {
+                        jobDetected = checkLastSuccessfulBuildTooLongAgo(aProject, property);
+                    }
 
+                }
             }
         }
         
@@ -252,18 +268,11 @@ public class Detection {
         if (job.getLastBuild() == null) {
             deadline = getDeadlineLastSuccessfulBuild(property);
 
-            if ((property != null && property.getDateOfFirstJobConfiguration() > 0 
-            		&& !isInDeadline(property.getDateOfFirstJobConfiguration(), deadline)) 
-            		|| !isInDeadline(job.getBuildDir().lastModified(), deadline)) {
-            	
-                if (this.descriptor != null) {
-                    setDetectedJob(job, "Job has never been built.",
-                            this.descriptor.getDeleteNeverBuiltJobs(),
-                            0, null);
-                } else {
-                    setDetectedJob(job, "Job has never been built.", Constants.DELETE_NEVER_BUILT_JOBS_DEFAULT,
-                            0, null);
-                }
+            if (!isInDeadline(job.getBuildDir().lastModified(), deadline)) {
+            	                
+                setDetectedJob(job, "Job has never been built.",
+                        detectionConfiguration.getBoolean("deleteNeverBuiltJobs"),
+                        0, null);
 
                 return true;
             }
@@ -379,9 +388,9 @@ public class Detection {
      */
     private long getDeadlineLastSuccessfulBuild(FailedJobDeactivator property) {
 
-        if (property == null) {
-            
-            return this.descriptor.getGlobalLastSuccessfulBuild()
+        if (detectionConfiguration.getBoolean("forceGlobalDeadlines") || property == null || !property.getIsConfigured()) {
+                        
+            return detectionConfiguration.getLong("globalLastSuccessfulBuild")
                     * Constants.DAYS_TO_64BIT_UNIXTIME;
 
         } else {
@@ -398,9 +407,9 @@ public class Detection {
      */
     private long getDeadlineLastManuallyTriggered(FailedJobDeactivator property) {
 
-        if (property == null) {
-            
-            return this.descriptor.getGlobalLastManuallyTriggered()
+        if (detectionConfiguration.getBoolean("forceGlobalDeadlines") || property == null || !property.getIsConfigured()) {
+                        
+            return detectionConfiguration.getLong("globalLastManuallyTriggered")
                     * Constants.DAYS_TO_64BIT_UNIXTIME;
         } else {
             return property.getLastManuallyTriggered()

@@ -26,6 +26,7 @@ package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -44,7 +45,15 @@ import javax.mail.internet.MimeMessage;
 
 import de.einsundeins.jenkins.plugins.failedjobdeactivator.FailedJobDeactivator.DescriptorImpl;
 import jenkins.model.Jenkins;
+import hudson.XmlFile;
+import hudson.model.AbstractProject;
+import hudson.model.Api;
+import hudson.model.Item;
 import hudson.tasks.Mailer;
+import hudson.plugins.jobConfigHistory.JobConfigHistory;
+import hudson.plugins.jobConfigHistory.JobConfigHistoryProjectAction;
+import hudson.plugins.jobConfigHistory.ConfigInfo;
+import hudson.plugins.jobConfigHistory.HistoryDescr;
 
 /**
  * All ways of notification.
@@ -81,6 +90,8 @@ public class Notification {
      * The mailer configuration session.
      */
     private Session session;
+    
+    private FailedJobDeactivator.DescriptorImpl descriptor;
     
     /**
      * Default constructor.
@@ -160,7 +171,7 @@ public class Notification {
 
         FailedJobDeactivator property = (FailedJobDeactivator) detectedJob.getaProject()
                 .getProperty(FailedJobDeactivator.class);
-        FailedJobDeactivator.DescriptorImpl descriptor = (DescriptorImpl) Jenkins
+        descriptor = (DescriptorImpl) Jenkins
                 .getInstance().getDescriptor(FailedJobDeactivator.class);
 
         MimeMessage msg = new MimeMessage(session);
@@ -177,11 +188,22 @@ public class Notification {
             msg.setFrom(new InternetAddress(replyToAddress));
             msg.setSentDate(new Date());
 
+            //Add users from job config page.
             if ((property != null) && (property.getUserNotification() != null)) {
                 msg.setRecipients(Message.RecipientType.TO, InternetAddress
                         .parse(property.getUserNotification(), true));
             }
+            
+            //Add user from jobconfighistory.
+            LinkedList<String> responsibleUserAddresses = detectResponsibleUsers(detectedJob.getaProject());
+            if(responsibleUserAddresses.size()>0){ 
+                for(String userAddress : responsibleUserAddresses){
+                    msg.addRecipients(Message.RecipientType.TO,
+                        userAddress);
+                }
+            }
 
+            //Add admin.
             if ((descriptor.getAdminNotification() != null)) {
                 msg.addRecipients(Message.RecipientType.TO,
                         descriptor.getAdminNotification());
@@ -194,6 +216,45 @@ public class Notification {
         } catch (MessagingException e) {
             logger.log(WARNING, "Sending email failed: " + e);
         }
+    }
+    
+    /**
+     * Returns the email address of the responsible user (first user in history) for the job.
+     * @param project
+     * @return the email address of the first user in history data.
+     */
+    private LinkedList<String> detectResponsibleUsers(AbstractProject<?,?> project){
+        
+        JobConfigHistoryProjectAction historyconfig = new JobConfigHistoryProjectAction(project);
+        String responsibleUserId = null;
+        String userAddress = null;
+        LinkedList<String> responsibleUsers = new LinkedList<String>();
+        
+        try {
+            if(historyconfig.getJobConfigs().size()>0){
+                
+                int countOfLastUsersToGetNotified = descriptor.getCountOfLastUsersToGetNotified() > 0 
+                        ? descriptor.getCountOfLastUsersToGetNotified() : Constants.NUMBER_OF_RESPONSIBLE_USERS;
+                
+                int i = 0;
+                while(i<countOfLastUsersToGetNotified && i<historyconfig.getJobConfigs().size()){
+                    responsibleUserId = historyconfig.getJobConfigs().get(i).getUserID();
+                    if(!responsibleUserId.contains("anonymous")){
+                        userAddress = Jenkins.getInstance().getUser(responsibleUserId).getProperty(Mailer.UserProperty.class).getAddress();
+                        
+                        if(!responsibleUsers.contains(userAddress)){
+                            responsibleUsers.add(userAddress);
+                        }
+                    }
+                                        
+                    i++;
+                }
+            }
+        } catch (IOException e) {
+            logger.log(WARNING, "Failed to get responsible user from JobConfigHistory. " + e);
+        }
+        
+        return responsibleUsers;
     }
 
     /**

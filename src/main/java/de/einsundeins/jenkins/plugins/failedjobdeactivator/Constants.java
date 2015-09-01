@@ -65,4 +65,6 @@ public final class Constants {
      * URL to the icon file.
      */
     public static final String ICON_FILE_ULR = "/plugin/failedJobDeactivator/icons/user-trash.png";
+    
+    public static final int NUMBER_OF_RESPONSIBLE_USERS = 10;
 }
