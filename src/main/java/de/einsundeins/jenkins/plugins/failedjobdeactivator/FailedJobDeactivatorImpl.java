@@ -190,7 +190,6 @@ public class FailedJobDeactivatorImpl extends Plugin {
         File folder = new File("exports/");
         if (!folder.exists() || !folder.isDirectory()) {
             folder.mkdir();
-            System.out.println("Verzeichnis erstellt.");
         }
                         
         FileWriter writer = new FileWriter("exports/detectedJobs.csv");
