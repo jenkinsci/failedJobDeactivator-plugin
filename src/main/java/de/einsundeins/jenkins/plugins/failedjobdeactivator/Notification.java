@@ -114,6 +114,8 @@ public class Notification {
             logAction(detectedJobs.get(x));
             if (mailerConfigured) {
                 notifyUsers(detectedJobs.get(x));
+            }else{
+                logger.log(INFO, "Mailer not configured correctly.");
             }
 
             x++;
