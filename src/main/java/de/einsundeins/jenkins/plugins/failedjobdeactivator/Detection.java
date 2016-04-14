@@ -26,6 +26,7 @@ package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import de.einsundeins.jenkins.plugins.failedjobdeactivator.FailedJobDeactivator.DescriptorImpl;
 
@@ -87,6 +88,8 @@ public class Detection {
      * Detection configuration from frontend.
      */
     private JSONObject detectionConfiguration;
+    
+    private static final Logger log = Logger.getLogger(Detection.class.getName());
         
 
     /**
@@ -111,7 +114,7 @@ public class Detection {
 
         // Get all jobs
         for (Item project : Jenkins.getInstance().getAllItems()) {
-            
+                        
             if (project instanceof AbstractProject){
             
                 aProject = (AbstractProject<?, ?>) project;

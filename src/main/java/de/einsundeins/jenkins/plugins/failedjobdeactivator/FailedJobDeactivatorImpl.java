@@ -185,15 +185,23 @@ public class FailedJobDeactivatorImpl extends Plugin {
         }
     }
     
+    /**
+     * Exports detected jobs as CSV file.
+     * @param req
+     * @param rsp
+     * @throws IOException
+     * @throws ServletException
+     */
     public void doExportCSV(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException{
-        
-        File folder = new File("exports/");
+
+        File folder;
+        String csvPath = Jenkins.getInstance().root.toString() + "/exports/";
+        folder = new File(csvPath);
         if (!folder.exists() || !folder.isDirectory()) {
             folder.mkdir();
-            System.out.println("Verzeichnis erstellt.");
         }
-                        
-        FileWriter writer = new FileWriter("exports/detectedJobs.csv");
+                            
+        FileWriter writer = new FileWriter(csvPath + "detectedJobs.csv");
         writer.append("Projectname,");
         writer.append("Failure causes,");
         writer.append("Days since last build,");
@@ -201,7 +209,7 @@ public class FailedJobDeactivatorImpl extends Plugin {
         writer.append("Job handling,");
         writer.append("Further information");
         writer.append('\n');
-                
+                        
         JSONArray jobHandlingJson = (JSONArray)req.getSubmittedForm().get("handleJob");
         
         if(detection.getDetectedJobs().size() != jobHandlingJson.size()){
@@ -226,7 +234,7 @@ public class FailedJobDeactivatorImpl extends Plugin {
       writer.close();
             
       rsp.setHeader("Content-Type", "text/csv");
-      rsp.serveFile(req, new File("exports/detectedJobs.csv").toURI().toURL());
+      rsp.serveFile(req, new File(csvPath + "detectedJobs.csv").toURI().toURL());
   }
 
 }
