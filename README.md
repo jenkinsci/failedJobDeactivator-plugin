@@ -2,7 +2,7 @@
 
 ## Description
 
-This plugin searches jenkins jobs which havent's been built successfully for a longer time.
+This plugin searches jenkins jobs which haven't been built successfully for a longer time.
 Detected jobs can either get deactivated or deleted. The rules can be chosen by the admin
 using the build-failure-analyzer-Plugin.
 
@@ -11,7 +11,7 @@ using the build-failure-analyzer-Plugin.
 This is a experimental fork. For the official plugin, see https://github.com/jenkinsci/failedjobdeactivator-plugin
 
 ## Maintainer
-Jochen A. Fürbacher  
+Jochen A. FÃ¼rbacher  
 1&1 Telecommunication SE  
 jochen.fuerbacher@1und1.de  
 
