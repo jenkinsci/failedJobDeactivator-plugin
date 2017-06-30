@@ -1,6 +1,0 @@
-table#showDetectedJobs {
-	width: 100%;
-}
-table#showDetectedJobs tr:nth-child(even) {
-	background-color: #eee;
-}
