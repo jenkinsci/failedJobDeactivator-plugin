@@ -15,10 +15,11 @@
 			
 			<j:choose>
 				<j:when test="${it.getDetectedJobs().isEmpty()}">
-					<p>${%No jobs detected.}</p>
+					<h2>${%No jobs detected.}</h2>
 				</j:when>
 			
 				<j:otherwise>
+					<h2>${%Number of detected jobs: } ${it.getDetectedJobs().size()}</h2>
 					<table id="showDetectedJobs" border="1px" class="pane sortable">
 						<th class="pane-header">${%Job}</th>
 						<th class="pane-header">${%Last successful build}</th>
