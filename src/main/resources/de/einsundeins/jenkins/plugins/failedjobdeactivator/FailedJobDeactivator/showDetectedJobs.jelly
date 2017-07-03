@@ -1,0 +1,38 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
+
+	<l:layout title="${%Failed Job Deactivator}" secured="true">
+	
+		<l:side-panel>
+			
+			<l:task icon="images/24x24/up.gif" title="${%Back to Dashboard}" href="${rootURL}/" />
+		
+		</l:side-panel>
+		
+		<l:main-panel>
+		
+			<h1>${%Failed Job Deactivator - Detected Jobs}</h1>
+			
+			<j:if test="${it.getDetectedJobs().isEmpty()}">
+				<p>${%No jobs detected.}</p>
+			</j:if>
+			
+			<table id="showDetectedJobs" border="1px" class="pane sortable">
+				<th class="pane-header">${%Job}</th>
+				<th class="pane-header">${%Last successful build}</th>
+				<th class="pane-header">${%Last build}</th>
+				
+				<j:forEach var="job" items="${it.getDetectedJobs()}">
+					<tr>
+						<td align="left"><a href="${rootURL}/${job.getUrl()}">${job.getName()}</a></td>
+						<td align="left">${job.getLastSuccessfulBuild().getTime()}</td>
+						<td align="left">${job.getLastBuild().getTime()}</td>
+					</tr>
+				</j:forEach>
+			</table>
+		
+		</l:main-panel>
+	
+	</l:layout>
+
+</j:jelly>

@@ -45,8 +45,6 @@ public class FailedJobDeactivatorGlobalConfiguration
 
 	private int lastSuccessfulBuild;
 
-	private int lastManuallyTriggered;
-
 	public FailedJobDeactivatorGlobalConfiguration() {
 		load();
 	}
@@ -59,11 +57,8 @@ public class FailedJobDeactivatorGlobalConfiguration
 				.getBoolean("deleteJobsWithoutBuilds");
 		try {
 			this.lastSuccessfulBuild = formData.getInt("lastSuccessfulBuild");
-			this.lastManuallyTriggered = formData
-					.getInt("lastManuallyTriggered");
 		} catch (JSONException e) {
 			this.lastSuccessfulBuild = Constants.DEFAULT_LAST_SUCCESSFUL_BUILD;
-			this.lastManuallyTriggered = Constants.DEFAULT_LAST_MANUALLY_TRIGGERED_BUILD;
 		}
 
 		save();
@@ -78,16 +73,8 @@ public class FailedJobDeactivatorGlobalConfiguration
 		return lastSuccessfulBuild;
 	}
 
-	public int getLastManuallyTriggered() {
-		return lastManuallyTriggered;
-	}
-
 	public int getDefaultLastSuccessfulBuild() {
 		return Constants.DEFAULT_LAST_SUCCESSFUL_BUILD;
-	}
-
-	public int getDefaultLastManuallyTriggeredBuild() {
-		return Constants.DEFAULT_LAST_MANUALLY_TRIGGERED_BUILD;
 	}
 
 	public static FailedJobDeactivatorGlobalConfiguration get() {
@@ -102,15 +89,6 @@ public class FailedJobDeactivatorGlobalConfiguration
 
 	public FormValidation doCheckLastSuccessfulBuild(@QueryParameter int value)
 			throws IOException, ServletException {
-		if (value < 1) {
-			return FormValidation
-					.error(Messages.errorMessageFormValidationDeadline());
-		}
-		return FormValidation.ok();
-	}
-
-	public FormValidation doCheckLastManuallyTriggered(
-			@QueryParameter int value) throws IOException, ServletException {
 		if (value < 1) {
 			return FormValidation
 					.error(Messages.errorMessageFormValidationDeadline());

@@ -24,13 +24,24 @@
 package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.servlet.ServletException;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 import hudson.Plugin;
+import hudson.model.Job;
 
 public class FailedJobDeactivator extends Plugin {
+
+	private Logger logger = Logger
+			.getLogger(FailedJobDeactivator.class.getName());
+
+	private JobScanner scanner;
 
 	public FailedJobDeactivatorGlobalConfiguration getGlobalConfiguration() {
 		return FailedJobDeactivatorGlobalConfiguration.get();
@@ -41,6 +52,17 @@ public class FailedJobDeactivator extends Plugin {
 
 		rsp.sendRedirect("showDetectedJobs");
 
+		try {
+			scanner = new JobScanner(
+					req.getSubmittedForm().getInt("lastSuccessfulBuild"));
+			scanner.startDetection();
+		} catch (ServletException e) {
+			logger.log(Level.WARNING, "Failed to get submitted form! " + e);
+		}
+	}
+
+	public List<Job<?, ?>> getDetectedJobs() {
+		return scanner.getDetectedJobs();
 	}
 
 }

@@ -27,10 +27,12 @@ public class Constants {
 	
 	//Global configuration
 	public static final int DEFAULT_LAST_SUCCESSFUL_BUILD = 28;
-	public static final int DEFAULT_LAST_MANUALLY_TRIGGERED_BUILD = 14;
 	
 	//Management Link
 	public static final String ICON_FILE_ULR = "/plugin/failedJobDeactivator/icons/user-trash.png";
 	public static final String MANAGEMENTLINK_URL = "/plugin/failedJobDeactivator/";
+	
+	//Calculation
+	public static final long DAYS_TO_64BIT_UNIXTIME = 86400000L;
 
 }

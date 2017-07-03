@@ -10,10 +10,6 @@
   <f:entry title="${%Last successful build}" field="lastSuccessfulBuild">
    <f:textbox default="${instance.defaultLastSuccessfulBuild}" />
   </f:entry>
-  
-  <f:entry title="${%Last manually triggered build}" field="lastManuallyTriggered">
-   <f:textbox default="${instance.defaultLastManuallyTriggeredBuild}" />
-  </f:entry>
 
  </f:section>
 </j:jelly>
