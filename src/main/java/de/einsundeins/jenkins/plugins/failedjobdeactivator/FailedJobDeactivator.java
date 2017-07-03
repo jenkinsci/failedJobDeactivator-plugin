@@ -24,7 +24,10 @@
 package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +38,7 @@ import org.kohsuke.stapler.StaplerResponse;
 
 import hudson.Plugin;
 import hudson.model.Job;
+import net.sf.json.JSONObject;
 
 public class FailedJobDeactivator extends Plugin {
 
@@ -63,6 +67,30 @@ public class FailedJobDeactivator extends Plugin {
 
 	public List<Job<?, ?>> getDetectedJobs() {
 		return scanner.getDetectedJobs();
+	}
+
+	public void doHandleJobs(StaplerRequest req, StaplerResponse rsp)
+			throws IOException, ServletException {
+
+		rsp.sendRedirect("");
+		convertJsonToMap(req.getSubmittedForm());
+
+		// TODO: Perform job actions.
+	}
+
+	private Map<String, Boolean> convertJsonToMap(JSONObject json) {
+		Map<String, Boolean> map = new HashMap<>();
+
+		Iterator<?> jobs = json.keys();
+		while (jobs.hasNext()) {
+			String jobName = (String) jobs.next();
+			JSONObject contents = (JSONObject) json.get(jobName);
+
+			Boolean action = contents.getBoolean("jobAction");
+			map.put(jobName, action);
+		}
+
+		return map;
 	}
 
 }

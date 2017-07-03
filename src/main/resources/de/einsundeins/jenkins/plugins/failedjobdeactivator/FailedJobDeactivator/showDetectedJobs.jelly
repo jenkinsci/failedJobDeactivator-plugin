@@ -20,19 +20,35 @@
 			
 				<j:otherwise>
 					<h2>${%Number of detected jobs: } ${it.getDetectedJobs().size()}</h2>
-					<table id="showDetectedJobs" border="1px" class="pane sortable">
-						<th class="pane-header">${%Job}</th>
-						<th class="pane-header">${%Last successful build}</th>
-						<th class="pane-header">${%Last build}</th>
+					
+					<f:form action="handleJobs" method="post" name="handleDetectedJobs">
+
+						<table id="showDetectedJobs" border="1px" class="pane sortable">
+							<th class="pane-header">${%Job}</th>
+							<th class="pane-header">${%Last successful build}</th>
+							<th class="pane-header">${%Last build}</th>
+							<th class="pane-header">${%Choose action}</th>
 				
-						<j:forEach var="job" items="${it.getDetectedJobs()}">
-							<tr>
-								<td align="left"><a href="${rootURL}/${job.getUrl()}">${job.getName()}</a></td>
-								<td align="left">${job.getLastSuccessfulBuild().getTime()}</td>
-								<td align="left">${job.getLastBuild().getTime()}</td>
-							</tr>
-						</j:forEach>
-					</table>
+							<j:forEach var="job" items="${it.getDetectedJobs()}">
+								<tr name="${job.getName()}">
+									<td align="left"><a href="${rootURL}/${job.getUrl()}">${job.getName()}</a></td>
+									<td align="right">${job.getLastSuccessfulBuild().getTime()}</td>
+									<td align="right">${job.getLastBuild().getTime()}</td>
+									<td align="center">
+										<select name="jobAction">
+											<option value="deactivate">${%Deactivate}</option>
+											<option value="delete">${%Delete}</option>
+											<option value="ignore">${%Ignore}</option>
+										</select>
+									</td>
+								</tr>
+							</j:forEach>
+						</table>
+						
+						<f:entry>
+							<f:submit name="handling" value="${%Start handling job}" />
+						</f:entry>
+					</f:form>
 				</j:otherwise>
 			</j:choose>
 		
