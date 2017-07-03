@@ -1,0 +1,40 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
+
+	<l:layout title="${%Failed Job Deactivator}" secured="true">
+	
+		<l:side-panel>
+			
+			<l:task icon="images/24x24/up.gif" title="${%Back to Dashboard}" href="${rootURL}/" />
+		
+		</l:side-panel>
+		
+		<l:main-panel>
+		
+			<h1>${%Failed Job Deactivator}</h1>
+			
+			<f:form action="startDetection">
+			
+				<f:entry title="${%Delete jobs without builds}" field="deleteJobsWithoutBuilds">
+					<f:checkbox checked="${it.globalConfiguration.getDeleteJobsWithoutBuilds()}" />
+				</f:entry>
+				
+				<f:entry title="${%Deadline of last successful build}" field="lastSuccessfulBuild">
+					<f:textbox default="${it.globalConfiguration.getDefaultLastSuccessfulBuild()}" />
+				</f:entry>
+				
+				<f:entry title="${%Deadline of last manual triggered build}" field="lastManuallyTriggered">
+					<f:textbox default="${it.globalConfiguration.getDefaultLastManuallyTriggeredBuild()}" />
+				</f:entry>
+				
+				<f:entry>
+					<f:submit value="${%Start detection}" />
+				</f:entry>
+			
+			</f:form>
+		
+		</l:main-panel>
+	
+	</l:layout>
+
+</j:jelly>

@@ -33,6 +33,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import hudson.Extension;
 import hudson.util.FormValidation;
 import jenkins.model.GlobalConfiguration;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 @Extension
@@ -56,8 +57,14 @@ public class FailedJobDeactivatorGlobalConfiguration
 
 		this.deleteJobsWithoutBuilds = formData
 				.getBoolean("deleteJobsWithoutBuilds");
-		this.lastSuccessfulBuild = formData.getInt("lastSuccessfulBuild");
-		this.lastManuallyTriggered = formData.getInt("lastManuallyTriggered");
+		try {
+			this.lastSuccessfulBuild = formData.getInt("lastSuccessfulBuild");
+			this.lastManuallyTriggered = formData
+					.getInt("lastManuallyTriggered");
+		} catch (JSONException e) {
+			this.lastSuccessfulBuild = Constants.DEFAULT_LAST_SUCCESSFUL_BUILD;
+			this.lastManuallyTriggered = Constants.DEFAULT_LAST_MANUALLY_TRIGGERED_BUILD;
+		}
 
 		save();
 		return true;
@@ -73,6 +80,14 @@ public class FailedJobDeactivatorGlobalConfiguration
 
 	public int getLastManuallyTriggered() {
 		return lastManuallyTriggered;
+	}
+
+	public int getDefaultLastSuccessfulBuild() {
+		return Constants.DEFAULT_LAST_SUCCESSFUL_BUILD;
+	}
+
+	public int getDefaultLastManuallyTriggeredBuild() {
+		return Constants.DEFAULT_LAST_MANUALLY_TRIGGERED_BUILD;
 	}
 
 	public static FailedJobDeactivatorGlobalConfiguration get() {
