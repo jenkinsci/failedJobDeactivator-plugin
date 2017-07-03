@@ -23,9 +23,15 @@
  */
 package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
 import hudson.Extension;
+import hudson.util.FormValidation;
 import jenkins.model.GlobalConfiguration;
 import net.sf.json.JSONObject;
 
@@ -77,5 +83,23 @@ public class FailedJobDeactivatorGlobalConfiguration
 	@Override
 	public final String getDisplayName() {
 		return Messages.displayName();
+	}
+
+	public FormValidation doCheckLastSuccessfulBuild(@QueryParameter int value)
+			throws IOException, ServletException {
+		if (value < 1) {
+			return FormValidation
+					.error(Messages.errorMessageFormValidationDeadline());
+		}
+		return FormValidation.ok();
+	}
+
+	public FormValidation doCheckLastManuallyTriggered(
+			@QueryParameter int value) throws IOException, ServletException {
+		if (value < 1) {
+			return FormValidation
+					.error(Messages.errorMessageFormValidationDeadline());
+		}
+		return FormValidation.ok();
 	}
 }
