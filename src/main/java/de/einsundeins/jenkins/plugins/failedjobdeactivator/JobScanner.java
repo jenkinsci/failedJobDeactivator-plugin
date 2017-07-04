@@ -16,32 +16,40 @@ public class JobScanner {
 
 	// Scanner configuration
 	long lastSuccessfulBuild;
+	int limit;
 	long systemtime;
 
 	List<Job<?, ?>> detectedJobs;
 
-	public JobScanner(int lastSuccessfulBuild) {
+	public JobScanner(long lastSuccessfulBuild, int limit) {
 		this.lastSuccessfulBuild = lastSuccessfulBuild
 				* Constants.DAYS_TO_64BIT_UNIXTIME;
+		this.limit = limit;
 		this.systemtime = System.currentTimeMillis();
 	}
 
 	public void startDetection() {
 		this.detectedJobs = new LinkedList<>();
 		for (Item item : Jenkins.getInstance().getAllItems()) {
+			if (limit == 0)
+				return;
+
 			if (!(item instanceof Job))
 				continue;
 
 			Job<?, ?> job = (Job<?, ?>) item;
 			if (jobHasNoBuildsAndExistsTooLong(job)) {
 				detectedJobs.add(job);
+				limit--;
 				continue;
 			}
 			if (job.getBuilds().isEmpty())
 				continue;
 
-			if (jobHasNoSuccessfulBuilds(job)) 
+			if (jobHasNoSuccessfulBuilds(job)) {
+				limit--;
 				detectedJobs.add(job);
+			}
 
 		}
 	}

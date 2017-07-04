@@ -64,8 +64,10 @@ public class FailedJobDeactivator extends Plugin {
 		rsp.sendRedirect("showDetectedJobs");
 
 		try {
+			JSONObject submittedForm = req.getSubmittedForm();
 			scanner = new JobScanner(
-					req.getSubmittedForm().getInt("lastSuccessfulBuild"));
+					submittedForm.getLong("lastSuccessfulBuild"),
+					submittedForm.getInt("limit"));
 			scanner.startDetection();
 		} catch (ServletException e) {
 			logger.log(Level.WARNING, "Failed to get submitted form! " + e);
