@@ -79,7 +79,11 @@
 						<br />
 						
 						<f:entry>
-							<f:submit name="handling" value="${%Start handling job}" />
+							<f:submit name="performJobAction" value="${%Start handling job}" />
+						</f:entry>
+						
+						<f:entry>
+							<f:submit name="generateCsv" value="${%Generate CSV file}" />
 						</f:entry>
 					</f:form>
 				</j:otherwise>
