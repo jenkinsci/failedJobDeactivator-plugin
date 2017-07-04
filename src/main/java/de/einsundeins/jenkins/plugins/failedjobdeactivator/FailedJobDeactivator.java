@@ -78,9 +78,17 @@ public class FailedJobDeactivator extends Plugin {
 	public boolean isBuildFailureAnalyserAvailable() {
 		return Util.isBuildFailureAnalyserAvailable();
 	}
+	
+	public boolean isJobConfigHistoryAvailable() {
+		return Util.isJobConfigHistoryAvailable();
+	}
 
 	public String getFailureCauses(String jobName) {
 		return Util.getFailureCauses(jobName);
+	}
+	
+	public String getLastUser(String jobName) {
+		return Util.getLastUser(jobName);
 	}
 
 	public void doHandleJobs(StaplerRequest req, StaplerResponse rsp)

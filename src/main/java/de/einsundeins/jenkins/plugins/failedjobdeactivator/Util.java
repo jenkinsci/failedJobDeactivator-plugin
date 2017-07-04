@@ -26,7 +26,6 @@ package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -42,6 +41,8 @@ import hudson.model.AbstractProject;
 import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
+import hudson.plugins.jobConfigHistory.ConfigInfo;
+import hudson.plugins.jobConfigHistory.JobConfigHistoryProjectAction;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 
@@ -62,6 +63,15 @@ public class Util {
 	public static boolean isBuildFailureAnalyserAvailable() {
 		Plugin plugin = Jenkins.getInstance()
 				.getPlugin("build-failure-analyzer");
+
+		if (plugin == null)
+			return false;
+
+		return true;
+	}
+
+	public static boolean isJobConfigHistoryAvailable() {
+		Plugin plugin = Jenkins.getInstance().getPlugin("jobConfigHistory");
 
 		if (plugin == null)
 			return false;
@@ -96,6 +106,32 @@ public class Util {
 		}
 
 		return failureCauses;
+	}
+
+	public static String getLastUser(String jobName) {
+		for (Item item : Jenkins.getInstance().getAllItems()) {
+			if (item.getName().equals(jobName)) {
+				Job<?, ?> job = (Job<?, ?>) item;
+				return getLastUser(job);
+			}
+		}
+		return null;
+	}
+
+	public static String getLastUser(Job<?, ?> job) {
+
+		JobConfigHistoryProjectAction historyconfig = new JobConfigHistoryProjectAction(
+				job);
+		try {
+			for (ConfigInfo info : historyconfig.getJobConfigs()) {
+				String userId = info.getUserID();
+				return userId;
+			}
+		} catch (IOException e) {
+			return null;
+		}
+
+		return null;
 	}
 
 	public static Map<String, String> convertJsonToMap(JSONObject json) {

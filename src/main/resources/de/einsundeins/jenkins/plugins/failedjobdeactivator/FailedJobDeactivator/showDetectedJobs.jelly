@@ -53,6 +53,9 @@
 							<j:if test="${it.isBuildFailureAnalyserAvailable()}">
 								<th class="pane-header">${%Last failure cause}</th>
 							</j:if>
+							<j:if test="${it.isJobConfigHistoryAvailable()}">
+								<th class="pane-header">${%Last user}</th>
+							</j:if>
 							<th class="pane-header">${%Choose action}</th>
 				
 							<j:forEach var="job" items="${it.getDetectedJobs()}">
@@ -62,6 +65,9 @@
 									<td align="right">${job.getLastBuild().getTime()}</td>
 									<j:if test="${it.isBuildFailureAnalyserAvailable()}">
 										<td align="left">${it.getFailureCauses(job.getName())}</td>
+									</j:if>
+									<j:if test="${it.isJobConfigHistoryAvailable()}">
+										<td align="left"><a href="${rootURL}/${job.getUrl()}jobConfigHistory/">${it.getLastUser(job.getName())}</a></td>
 									</j:if>
 									<td align="center">
 										<select name="${job.getName()}" field="jobAction">
