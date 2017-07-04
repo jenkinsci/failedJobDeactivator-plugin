@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import hudson.model.Item;
 import hudson.model.Job;
@@ -17,24 +18,30 @@ public class JobScanner {
 	// Scanner configuration
 	long lastSuccessfulBuild;
 	int limit;
+	String regex;
 	long systemtime;
 
 	List<Job<?, ?>> detectedJobs;
 
-	public JobScanner(long lastSuccessfulBuild, int limit) {
+	public JobScanner(long lastSuccessfulBuild, int limit, String regex) {
 		this.lastSuccessfulBuild = lastSuccessfulBuild
 				* Constants.DAYS_TO_64BIT_UNIXTIME;
 		this.limit = limit;
+		this.regex = regex;
 		this.systemtime = System.currentTimeMillis();
 	}
 
 	public void startDetection() {
 		this.detectedJobs = new LinkedList<>();
+		boolean regexProvided = regex != null && !regex.isEmpty();
 		for (Item item : Jenkins.getInstance().getAllItems()) {
 			if (limit == 0)
 				return;
 
 			if (!(item instanceof Job))
+				continue;
+
+			if (regexProvided && !jobnameMatchesPattern(item.getName()))
 				continue;
 
 			Job<?, ?> job = (Job<?, ?>) item;
@@ -100,6 +107,10 @@ public class JobScanner {
 
 	public List<Job<?, ?>> getDetectedJobs() {
 		return detectedJobs;
+	}
+
+	private boolean jobnameMatchesPattern(String jobName) {
+		return Pattern.matches(regex, jobName);
 	}
 
 }

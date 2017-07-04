@@ -45,6 +45,7 @@ import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
 import jenkins.model.Jenkins;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 public class FailedJobDeactivator extends Plugin {
@@ -67,9 +68,10 @@ public class FailedJobDeactivator extends Plugin {
 			JSONObject submittedForm = req.getSubmittedForm();
 			scanner = new JobScanner(
 					submittedForm.getLong("lastSuccessfulBuild"),
-					submittedForm.getInt("limit"));
+					submittedForm.getInt("limit"),
+					submittedForm.getString("regex"));
 			scanner.startDetection();
-		} catch (ServletException e) {
+		} catch (JSONException | ServletException e) {
 			logger.log(Level.WARNING, "Failed to get submitted form! " + e);
 		}
 	}

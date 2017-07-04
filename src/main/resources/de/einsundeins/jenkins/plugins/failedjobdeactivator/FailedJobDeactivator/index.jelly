@@ -46,6 +46,10 @@
 					<f:textbox default="-1" />
 				</f:entry>
 				
+				<f:entry title="${%Limit detection to match pattern}" field="regex">
+					<f:textbox />
+				</f:entry>
+				
 				<f:entry>
 					<f:submit value="${%Start detection}" />
 				</f:entry>
