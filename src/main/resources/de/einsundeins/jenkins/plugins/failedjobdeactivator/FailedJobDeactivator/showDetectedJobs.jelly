@@ -30,13 +30,13 @@
 							<th class="pane-header">${%Choose action}</th>
 				
 							<j:forEach var="job" items="${it.getDetectedJobs()}">
-								<tr name="${job.getName()}">
+								<tr>
 									<td align="left"><a href="${rootURL}/${job.getUrl()}">${job.getName()}</a></td>
 									<td align="right">${job.getLastSuccessfulBuild().getTime()}</td>
 									<td align="right">${job.getLastBuild().getTime()}</td>
 									<td align="center">
-										<select name="jobAction">
-											<option value="deactivate">${%Deactivate}</option>
+										<select name="${job.getName()}" field="jobAction">
+											<option value="disable">${%Disable}</option>
 											<option value="delete">${%Delete}</option>
 											<option value="ignore">${%Ignore}</option>
 										</select>

@@ -48,7 +48,7 @@ public class JobScanner {
 
 	private boolean jobHasNoBuildsAndExistsTooLong(Job<?, ?> job) {
 
-		logger.log(Level.INFO,
+		logger.log(Level.FINEST,
 				"Check if job " + job.getName() + " has no builds.");
 
 		if (!job.getBuilds().isEmpty())
@@ -65,7 +65,7 @@ public class JobScanner {
 	 * successful build, if the jobs exists too long
 	 */
 	private boolean jobHasNoSuccessfulBuilds(Job<?, ?> job) {
-		logger.log(Level.INFO,
+		logger.log(Level.FINEST,
 				"Check if job " + job.getName() + " has no successful builds.");
 
 		Run<?, ?> lastSuccessfulBuild = job.getLastSuccessfulBuild();

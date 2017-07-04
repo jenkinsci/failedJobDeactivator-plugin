@@ -73,21 +73,23 @@ public class FailedJobDeactivator extends Plugin {
 			throws IOException, ServletException {
 
 		rsp.sendRedirect("");
-		convertJsonToMap(req.getSubmittedForm());
-
-		// TODO: Perform job actions.
+		new JobHandling()
+				.performJobHandling(convertJsonToMap(req.getSubmittedForm()));
 	}
 
-	private Map<String, Boolean> convertJsonToMap(JSONObject json) {
-		Map<String, Boolean> map = new HashMap<>();
+	private Map<String, String> convertJsonToMap(JSONObject json) {
+		Map<String, String> map = new HashMap<>();
 
-		Iterator<?> jobs = json.keys();
-		while (jobs.hasNext()) {
-			String jobName = (String) jobs.next();
-			JSONObject contents = (JSONObject) json.get(jobName);
-
-			Boolean action = contents.getBoolean("jobAction");
-			map.put(jobName, action);
+		try {
+			Iterator<?> jobs = json.keys();
+			while (jobs.hasNext()) {
+				String jobName = (String) jobs.next();
+				String action = (String) json.get(jobName);
+				map.put(jobName, action);
+			}
+		} catch (Exception e) {
+			logger.log(Level.WARNING,
+					"Failed to convert job action json to map. ", e);
 		}
 
 		return map;
