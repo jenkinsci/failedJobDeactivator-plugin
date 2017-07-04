@@ -37,13 +37,9 @@
 			<h1>${%Failed Job Deactivator}</h1>
 			
 			<f:form action="startDetection">
-			
-				<f:entry title="${%Delete jobs without builds}" field="deleteJobsWithoutBuilds">
-					<f:checkbox checked="${it.globalConfiguration.getDeleteJobsWithoutBuilds()}" />
-				</f:entry>
 				
 				<f:entry title="${%Deadline of last successful build}" field="lastSuccessfulBuild">
-					<f:textbox default="${it.globalConfiguration.getLastSuccessfulBuild()}" />
+					<f:textbox default="${it.defaultLastSuccessfulBuild}" />
 				</f:entry>
 				
 				<f:entry>

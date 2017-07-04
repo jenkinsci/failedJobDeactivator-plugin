@@ -54,8 +54,8 @@ public class FailedJobDeactivator extends Plugin {
 
 	private JobScanner scanner;
 
-	public FailedJobDeactivatorGlobalConfiguration getGlobalConfiguration() {
-		return FailedJobDeactivatorGlobalConfiguration.get();
+	public int getDefaultLastSuccessfulBuild() {
+		return Constants.DEFAULT_LAST_SUCCESSFUL_BUILD;
 	}
 
 	public void doStartDetection(StaplerRequest req, StaplerResponse rsp)
