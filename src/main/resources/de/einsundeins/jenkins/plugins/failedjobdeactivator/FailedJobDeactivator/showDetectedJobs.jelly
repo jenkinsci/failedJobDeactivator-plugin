@@ -76,6 +76,8 @@
 							</j:forEach>
 						</table>
 						
+						<br />
+						
 						<f:entry>
 							<f:submit name="handling" value="${%Start handling job}" />
 						</f:entry>
