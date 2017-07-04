@@ -37,7 +37,10 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 import hudson.Plugin;
+import hudson.model.AbstractProject;
+import hudson.model.Item;
 import hudson.model.Job;
+import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 
 public class FailedJobDeactivator extends Plugin {
@@ -67,6 +70,16 @@ public class FailedJobDeactivator extends Plugin {
 
 	public List<Job<?, ?>> getDetectedJobs() {
 		return scanner.getDetectedJobs();
+	}
+
+	public boolean isInstanceOfAbstractProject(String jobName) {
+		for (Item item : Jenkins.getInstance().getAllItems()) {
+			if (item.getName().equals(jobName)
+					&& item instanceof AbstractProject) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void doHandleJobs(StaplerRequest req, StaplerResponse rsp)

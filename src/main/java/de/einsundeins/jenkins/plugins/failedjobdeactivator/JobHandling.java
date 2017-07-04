@@ -106,7 +106,6 @@ public class JobHandling {
 				} catch (InterruptedException | IOException e) {
 					logger.log(Level.WARNING,
 							"Failed to delete job " + job + ".", e);
-					return;
 				}
 			}
 		}

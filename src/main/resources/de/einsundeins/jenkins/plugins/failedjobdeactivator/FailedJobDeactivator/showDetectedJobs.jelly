@@ -36,7 +36,9 @@
 									<td align="right">${job.getLastBuild().getTime()}</td>
 									<td align="center">
 										<select name="${job.getName()}" field="jobAction">
-											<option value="disable">${%Disable}</option>
+											<j:if test="${it.isInstanceOfAbstractProject(job.getName())}">
+												<option value="disable">${%Disable}</option>
+											</j:if>
 											<option value="delete">${%Delete}</option>
 											<option value="ignore">${%Ignore}</option>
 										</select>
