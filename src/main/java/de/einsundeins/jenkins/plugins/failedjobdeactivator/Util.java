@@ -51,11 +51,8 @@ public class Util {
 	private static Logger logger = Logger.getLogger(Util.class.getName());
 
 	public static boolean isInstanceOfAbstractProject(String jobName) {
-		for (Item item : Jenkins.getInstance().getAllItems()) {
-			if (item.getName().equals(jobName)
-					&& item instanceof AbstractProject) {
-				return true;
-			}
+		if (getJobByName(jobName) instanceof AbstractProject) {
+			return true;
 		}
 		return false;
 	}
@@ -79,17 +76,24 @@ public class Util {
 		return true;
 	}
 
-	public static String getFailureCauses(String jobName) {
+	public static Job<?, ?> getJobByName(String jobName) {
 		for (Item item : Jenkins.getInstance().getAllItems()) {
 			if (item.getName().equals(jobName)) {
 				Job<?, ?> job = (Job<?, ?>) item;
-				return getFailureCauses(job);
+				return job;
 			}
 		}
 		return null;
 	}
 
+	public static String getFailureCauses(String jobName) {
+		return getFailureCauses(getJobByName(jobName));
+	}
+
 	public static String getFailureCauses(Job<?, ?> job) {
+
+		if (job == null)
+			return null;
 
 		Run<?, ?> build = job.getLastBuild();
 		if (build == null)
@@ -109,16 +113,13 @@ public class Util {
 	}
 
 	public static String getLastUser(String jobName) {
-		for (Item item : Jenkins.getInstance().getAllItems()) {
-			if (item.getName().equals(jobName)) {
-				Job<?, ?> job = (Job<?, ?>) item;
-				return getLastUser(job);
-			}
-		}
-		return null;
+		return getLastUser(getJobByName(jobName));
 	}
 
 	public static String getLastUser(Job<?, ?> job) {
+
+		if (job == null)
+			return null;
 
 		JobConfigHistoryProjectAction historyconfig = new JobConfigHistoryProjectAction(
 				job);
@@ -152,8 +153,8 @@ public class Util {
 	}
 
 	public static File generateCsv(List<Job<?, ?>> jobs) throws IOException {
-		String filePath = Jenkins.getInstance().getRootDir()
-				+ "/" + Constants.CSV_FILENAME;
+		String filePath = Jenkins.getInstance().getRootDir() + "/"
+				+ Constants.CSV_FILENAME;
 		File file = new File(filePath);
 		FileWriter writer = new FileWriter(file);
 		StringBuilder stringBuilder = new StringBuilder();

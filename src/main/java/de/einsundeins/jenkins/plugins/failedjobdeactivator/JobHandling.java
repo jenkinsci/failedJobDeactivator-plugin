@@ -30,9 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import hudson.model.AbstractProject;
-import hudson.model.Item;
 import hudson.model.Job;
-import jenkins.model.Jenkins;
 
 public class JobHandling {
 
@@ -48,13 +46,14 @@ public class JobHandling {
 				Map.Entry<String, String> job = iter.next();
 				String jobname = job.getKey();
 				String jobaction = job.getValue();
+				Job<?, ?> item = Util.getJobByName(jobname);
 
 				switch (jobaction) {
 					case "disable" :
-						disableJob(jobname);
+						disableJob(item);
 						break;
 					case "delete" :
-						deleteJob(jobname);
+						deleteJob(item);
 				}
 
 			}
@@ -65,51 +64,39 @@ public class JobHandling {
 		}
 	}
 
-	private void disableJob(String job) {
+	private void disableJob(Job<?, ?> job) {
+
+		if (job == null)
+			return;
 
 		logger.log(Level.INFO, "Disable job " + job + ".");
 
-		AbstractProject<?, ?> project;
 		try {
-			for (Item item : Jenkins.getInstance().getAllItems()) {
-				if (item.getName().equals(job)) {
-					project = (AbstractProject<?, ?>) item;
-
-					try {
-						project.disable();
-						return;
-					} catch (IOException e) {
-						logger.log(Level.WARNING,
-								"Failed to disable job " + job + ".", e);
-						return;
-					}
-				}
-			}
-			logger.log(Level.INFO, "Job " + job + " not found.");
+			AbstractProject<?, ?> project = (AbstractProject<?, ?>) job;
+			project.disable();
 			return;
-		} catch (ClassCastException e) {
-			logger.log(Level.INFO, "Cannot disable " + job + ".");
+
+		} catch (IOException | ClassCastException e) {
+			logger.log(Level.INFO, "Cannot disable " + job.getName() + ".");
 			return;
 		}
 	}
 
-	private void deleteJob(String job) {
-		logger.log(Level.INFO, "Delete job " + job + ".");
+	private void deleteJob(Job<?, ?> job) {
 
-		for (Item item : Jenkins.getInstance().getAllItems()) {
-			if (item.getName().equals(job)) {
-				Job<?, ?> project = (Job<?, ?>) item;
+		if (job == null)
+			return;
 
-				try {
-					project.delete();
-					return;
-				} catch (InterruptedException | IOException e) {
-					logger.log(Level.WARNING,
-							"Failed to delete job " + job + ".", e);
-				}
-			}
+		logger.log(Level.INFO, "Delete job " + job.getName() + ".");
+
+		try {
+			job.delete();
+			return;
+		} catch (InterruptedException | IOException e) {
+			logger.log(Level.WARNING,
+					"Failed to delete job " + job.getName() + ".", e);
 		}
-		logger.log(Level.INFO, "Job " + job + " not found.");
+
 		return;
 	}
 
