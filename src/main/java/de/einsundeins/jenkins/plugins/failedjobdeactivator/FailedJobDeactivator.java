@@ -78,7 +78,7 @@ public class FailedJobDeactivator extends Plugin {
 	public boolean isBuildFailureAnalyserAvailable() {
 		return Util.isBuildFailureAnalyserAvailable();
 	}
-	
+
 	public boolean isJobConfigHistoryAvailable() {
 		return Util.isJobConfigHistoryAvailable();
 	}
@@ -86,7 +86,7 @@ public class FailedJobDeactivator extends Plugin {
 	public String getFailureCauses(String jobName) {
 		return Util.getFailureCauses(jobName);
 	}
-	
+
 	public String getLastUser(String jobName) {
 		return Util.getLastUser(jobName);
 	}
@@ -97,6 +97,8 @@ public class FailedJobDeactivator extends Plugin {
 		if (req.hasParameter("generateCsv")) {
 			File file = Util.generateCsv(getDetectedJobs());
 			rsp.setContentType("text/csv");
+			rsp.addHeader("Content-Disposition",
+					"attachment; filename=" + Constants.CSV_FILENAME);
 			rsp.serveFile(req, file.toURI().toURL());
 		} else {
 			rsp.forwardToPreviousPage(req);

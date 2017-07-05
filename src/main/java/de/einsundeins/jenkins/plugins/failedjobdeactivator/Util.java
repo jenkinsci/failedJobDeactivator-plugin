@@ -153,7 +153,7 @@ public class Util {
 
 	public static File generateCsv(List<Job<?, ?>> jobs) throws IOException {
 		String filePath = Jenkins.getInstance().getRootDir()
-				+ "/detectedJobs.csv";
+				+ "/" + Constants.CSV_FILENAME;
 		File file = new File(filePath);
 		FileWriter writer = new FileWriter(file);
 		StringBuilder stringBuilder = new StringBuilder();

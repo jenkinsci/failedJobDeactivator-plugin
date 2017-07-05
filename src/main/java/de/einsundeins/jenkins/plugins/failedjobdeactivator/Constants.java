@@ -24,15 +24,18 @@
 package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
 public class Constants {
-	
-	//Global configuration
+
+	// Global configuration
 	public static final int DEFAULT_LAST_SUCCESSFUL_BUILD = 28;
-	
-	//Management Link
+
+	// Management Link
 	public static final String ICON_FILE_ULR = "/plugin/failedJobDeactivator/icons/user-trash.png";
 	public static final String MANAGEMENTLINK_URL = "/plugin/failedJobDeactivator/";
-	
-	//Calculation
+
+	// Calculation
 	public static final long DAYS_TO_64BIT_UNIXTIME = 86400000L;
+
+	// CSV file
+	public static final String CSV_FILENAME = "detectedJobs.csv";
 
 }
