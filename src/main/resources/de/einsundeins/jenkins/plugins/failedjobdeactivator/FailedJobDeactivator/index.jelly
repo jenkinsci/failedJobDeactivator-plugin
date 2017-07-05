@@ -38,7 +38,9 @@
 			
 			<f:form action="startDetection">
 				
-				<f:entry title="${%Deadline of last successful build}" field="lastSuccessfulBuild">
+				<f:entry title="${%Deadline of last successful build}" 
+				         description="(${%in days})" 
+				         field="lastSuccessfulBuild">
 					<f:textbox default="${it.defaultLastSuccessfulBuild}" />
 				</f:entry>
 				
