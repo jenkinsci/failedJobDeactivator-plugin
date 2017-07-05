@@ -51,9 +51,13 @@ public class Util {
 	private static Logger logger = Logger.getLogger(Util.class.getName());
 
 	public static boolean isInstanceOfAbstractProject(String jobName) {
-		if (getJobByName(jobName) instanceof AbstractProject) {
+		return isInstanceOfAbstractProject(getJobByName(jobName));
+	}
+
+	public static boolean isInstanceOfAbstractProject(Job<?, ?> job) {
+		if (job instanceof AbstractProject)
 			return true;
-		}
+
 		return false;
 	}
 
