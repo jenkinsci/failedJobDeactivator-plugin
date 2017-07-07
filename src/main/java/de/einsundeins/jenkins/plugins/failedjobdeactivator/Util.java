@@ -167,10 +167,10 @@ public class Util {
 			String jobname = job.getName();
 			String lastSuccessfulBuild = job.getLastSuccessfulBuild() != null
 					? job.getLastSuccessfulBuild().getTime().toString()
-					: null;
+					: "";
 			String lastBuild = job.getLastBuild() != null
 					? job.getLastBuild().getTime().toString()
-					: null;
+					: "";
 			stringBuilder.append(jobname);
 			stringBuilder.append(",").append(lastSuccessfulBuild);
 			stringBuilder.append(",").append(lastBuild);
