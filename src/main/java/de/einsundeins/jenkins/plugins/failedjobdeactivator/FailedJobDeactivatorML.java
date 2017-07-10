@@ -30,7 +30,7 @@ import hudson.Extension;
 import hudson.model.ManagementLink;
 
 @Extension
-public class FailedJobDeactivatorManagementLink extends ManagementLink {
+public class FailedJobDeactivatorML extends ManagementLink {
 
 	@Override
 	public String getDisplayName() {

@@ -39,10 +39,10 @@ import hudson.model.Job;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
-public class FailedJobDeactivator extends Plugin {
+public class FailedJobDeactivatorModel extends Plugin {
 
 	private Logger logger = Logger
-			.getLogger(FailedJobDeactivator.class.getName());
+			.getLogger(FailedJobDeactivatorModel.class.getName());
 
 	private JobScanner scanner;
 
