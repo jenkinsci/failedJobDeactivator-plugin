@@ -36,24 +36,23 @@ public class JobHandling {
 
 	private Logger logger = Logger.getLogger(JobHandling.class.getName());
 
-	public boolean performJobHandling(Map<String, String> jobs) {
+	public boolean performJobHandling(Map<Job<?, ?>, String> jobs) {
 
 		try {
-			Iterator<Map.Entry<String, String>> iter = jobs.entrySet()
+			Iterator<Map.Entry<Job<?, ?>, String>> iter = jobs.entrySet()
 					.iterator();
 
 			while (iter.hasNext()) {
-				Map.Entry<String, String> job = iter.next();
-				String jobname = job.getKey();
-				String jobaction = job.getValue();
-				Job<?, ?> item = Util.getJobByName(jobname);
+				Map.Entry<Job<?, ?>, String> jobEntry = iter.next();
+				Job<?, ?> job = jobEntry.getKey();
+				String jobaction = jobEntry.getValue();
 
 				switch (jobaction) {
 					case "disable" :
-						disableJob(item);
+						disableJob(job);
 						break;
 					case "delete" :
-						deleteJob(item);
+						deleteJob(job);
 				}
 
 			}

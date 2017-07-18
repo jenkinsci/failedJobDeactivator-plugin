@@ -71,8 +71,8 @@ public class FailedJobDeactivatorModel extends Plugin {
 		return scanner.getDetectedJobs();
 	}
 
-	public boolean isInstanceOfAbstractProject(String jobName) {
-		return Util.isInstanceOfAbstractProject(jobName);
+	public boolean isInstanceOfAbstractProject(Job<?, ?> job) {
+		return Util.isInstanceOfAbstractProject(job);
 	}
 
 	public boolean isBuildFailureAnalyserAvailable() {
@@ -83,12 +83,12 @@ public class FailedJobDeactivatorModel extends Plugin {
 		return Util.isJobConfigHistoryAvailable();
 	}
 
-	public String getFailureCauses(String jobName) {
-		return Util.getFailureCauses(jobName);
+	public String getFailureCauses(Job<?, ?> job) {
+		return Util.getFailureCauses(job);
 	}
 
-	public String getLastUser(String jobName) {
-		return Util.getLastUser(jobName);
+	public String getLastUser(Job<?, ?> job) {
+		return Util.getLastUser(job);
 	}
 
 	public void doHandleJobs(StaplerRequest req, StaplerResponse rsp)

@@ -50,10 +50,6 @@ public class Util {
 
 	private static Logger logger = Logger.getLogger(Util.class.getName());
 
-	public static boolean isInstanceOfAbstractProject(String jobName) {
-		return isInstanceOfAbstractProject(getJobByName(jobName));
-	}
-
 	public static boolean isInstanceOfAbstractProject(Job<?, ?> job) {
 		if (job instanceof AbstractProject)
 			return true;
@@ -80,20 +76,6 @@ public class Util {
 		return true;
 	}
 
-	public static Job<?, ?> getJobByName(String jobName) {
-		for (Item item : Jenkins.getInstance().getAllItems()) {
-			if (item.getName().equals(jobName)) {
-				Job<?, ?> job = (Job<?, ?>) item;
-				return job;
-			}
-		}
-		return null;
-	}
-
-	public static String getFailureCauses(String jobName) {
-		return getFailureCauses(getJobByName(jobName));
-	}
-
 	public static String getFailureCauses(Job<?, ?> job) {
 
 		if (job == null)
@@ -116,10 +98,6 @@ public class Util {
 		return failureCauses;
 	}
 
-	public static String getLastUser(String jobName) {
-		return getLastUser(getJobByName(jobName));
-	}
-
 	public static String getLastUser(Job<?, ?> job) {
 
 		if (job == null)
@@ -139,15 +117,26 @@ public class Util {
 		return null;
 	}
 
-	public static Map<String, String> convertJsonToMap(JSONObject json) {
-		Map<String, String> map = new HashMap<>();
+	public static Job<?, ?> getJobByName(String jobName) {
+		for (Item item : Jenkins.getInstance().getAllItems()) {
+			if (item.getName().equals(jobName)) {
+				Job<?, ?> job = (Job<?, ?>) item;
+				return job;
+			}
+		}
+		return null;
+	}
 
+	public static Map<Job<?, ?>, String> convertJsonToMap(JSONObject json) {
+		Map<Job<?, ?>, String> map = new HashMap<>();
 		try {
 			Iterator<?> jobs = json.keys();
 			while (jobs.hasNext()) {
 				String jobName = (String) jobs.next();
 				String action = (String) json.get(jobName);
-				map.put(jobName, action);
+				if (!action.equals("ignore")) {
+					map.put(getJobByName(jobName), action);
+				}
 			}
 		} catch (Exception e) {
 			logger.log(Level.WARNING, "Failed to convert json to map. ", e);
