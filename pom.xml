@@ -16,7 +16,7 @@
 
   <name>Failed Job Deactivator</name>
   <description>This plugin deactivates or deletes jobs, when jobs haven't been built successfully for a longer time.</description>
-  <url>https://wiki.jenkins-ci.org/display/JENKINS/FailedJobDeactivator+Plugin</url>
+  <url>https://plugins.jenkins.io/failedJobDeactivator</url>
 
   <licenses>
     <license>
