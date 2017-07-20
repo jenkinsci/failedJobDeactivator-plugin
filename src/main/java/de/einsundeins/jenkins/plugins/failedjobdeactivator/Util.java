@@ -24,8 +24,11 @@
 package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +39,7 @@ import java.util.logging.Logger;
 import com.sonyericsson.jenkins.plugins.bfa.model.FailureCauseBuildAction;
 import com.sonyericsson.jenkins.plugins.bfa.model.FoundFailureCause;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Plugin;
 import hudson.model.AbstractProject;
 import hudson.model.Item;
@@ -58,8 +62,10 @@ public class Util {
 	}
 
 	public static boolean isBuildFailureAnalyserAvailable() {
-		Plugin plugin = Jenkins.getInstance()
-				.getPlugin("build-failure-analyzer");
+		Jenkins jenkins = Jenkins.getInstance();
+		if (jenkins == null)
+			return false;
+		Plugin plugin = jenkins.getPlugin("build-failure-analyzer");
 
 		if (plugin == null)
 			return false;
@@ -68,7 +74,10 @@ public class Util {
 	}
 
 	public static boolean isJobConfigHistoryAvailable() {
-		Plugin plugin = Jenkins.getInstance().getPlugin("jobConfigHistory");
+		Jenkins jenkins = Jenkins.getInstance();
+		if (jenkins == null)
+			return false;
+		Plugin plugin = jenkins.getPlugin("jobConfigHistory");
 
 		if (plugin == null)
 			return false;
@@ -90,12 +99,13 @@ public class Util {
 		if (action == null)
 			return null;
 
-		String failureCauses = "";
+		StringBuffer failureCauses = new StringBuffer();
 		for (FoundFailureCause failureCause : action.getFoundFailureCauses()) {
-			failureCauses = failureCauses + failureCause.getName() + "\n";
+			failureCauses.append(failureCause.getName());
+			failureCauses.append("\n");
 		}
 
-		return failureCauses;
+		return failureCauses.toString();
 	}
 
 	public static String getLastUser(Job<?, ?> job) {
@@ -118,7 +128,10 @@ public class Util {
 	}
 
 	public static Job<?, ?> getJobByName(String jobName) {
-		for (Item item : Jenkins.getInstance().getAllItems()) {
+		Jenkins jenkins = Jenkins.getInstance();
+		if (jenkins == null)
+			return null;
+		for (Item item : jenkins.getAllItems()) {
 			if (item.getName().equals(jobName)) {
 				Job<?, ?> job = (Job<?, ?>) item;
 				return job;
@@ -145,36 +158,49 @@ public class Util {
 		return map;
 	}
 
-	public static File generateCsv(List<Job<?, ?>> jobs) throws IOException {
-		String filePath = Jenkins.getInstance().getRootDir() + "/"
-				+ Constants.CSV_FILENAME;
+	@SuppressFBWarnings(value = {"NP_NULL_ON_SOME_PATH_EXCEPTION",
+			"OS_OPEN_STREAM"})
+	public static File generateCsv(List<Job<?, ?>> jobs) {
+		Jenkins jenkins = Jenkins.getInstance();
+		if (jenkins == null)
+			return null;
+		String filePath = jenkins.getRootDir() + "/" + Constants.CSV_FILENAME;
 		File file = new File(filePath);
-		FileWriter writer = new FileWriter(file);
-		StringBuilder stringBuilder = new StringBuilder();
+		Writer writer = null;
+		try {
+			StringBuilder stringBuilder = new StringBuilder();
+			writer = new OutputStreamWriter(new FileOutputStream(file),
+					StandardCharsets.UTF_8);
+			for (Job<?, ?> job : jobs) {
+				String jobname = job.getName();
+				String lastSuccessfulBuild = job
+						.getLastSuccessfulBuild() != null
+								? job.getLastSuccessfulBuild().getTime()
+										.toString()
+								: "";
+				String lastBuild = job.getLastBuild() != null
+						? job.getLastBuild().getTime().toString()
+						: "";
+				stringBuilder.append(jobname);
+				stringBuilder.append(",").append(lastSuccessfulBuild);
+				stringBuilder.append(",").append(lastBuild);
 
-		for (Job<?, ?> job : jobs) {
-			String jobname = job.getName();
-			String lastSuccessfulBuild = job.getLastSuccessfulBuild() != null
-					? job.getLastSuccessfulBuild().getTime().toString()
-					: "";
-			String lastBuild = job.getLastBuild() != null
-					? job.getLastBuild().getTime().toString()
-					: "";
-			stringBuilder.append(jobname);
-			stringBuilder.append(",").append(lastSuccessfulBuild);
-			stringBuilder.append(",").append(lastBuild);
+				if (isBuildFailureAnalyserAvailable()) {
+					String failureCauses = getFailureCauses(job);
+					stringBuilder.append(",").append(failureCauses);
+				}
 
-			if (isBuildFailureAnalyserAvailable()) {
-				String failureCauses = getFailureCauses(job);
-				stringBuilder.append(",").append(failureCauses);
+				stringBuilder.append("\n");
 			}
 
-			stringBuilder.append("\n");
+			writer.append(stringBuilder.toString());
+			writer.flush();
+		} catch (IOException e) {
+			try {
+				writer.close();
+			} catch (IOException e1) {
+			}
 		}
-
-		writer.append(stringBuilder.toString());
-		writer.flush();
-		writer.close();
 
 		return file;
 	}

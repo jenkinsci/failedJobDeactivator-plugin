@@ -53,6 +53,8 @@ public class JobHandling {
 						break;
 					case "delete" :
 						deleteJob(job);
+						break;
+					default :
 				}
 
 			}

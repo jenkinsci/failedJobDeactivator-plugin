@@ -34,7 +34,10 @@ public class JobScanner {
 	public void startDetection() {
 		this.detectedJobs = new LinkedList<>();
 		boolean regexProvided = regex != null && !regex.isEmpty();
-		for (Item item : Jenkins.getInstance().getAllItems()) {
+		Jenkins jenkins = Jenkins.getInstance();
+		if (jenkins == null)
+			return;
+		for (Item item : jenkins.getAllItems()) {
 			if (limit == 0)
 				return;
 
