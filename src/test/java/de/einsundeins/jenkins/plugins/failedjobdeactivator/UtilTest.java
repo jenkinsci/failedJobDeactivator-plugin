@@ -23,7 +23,6 @@
  */
 package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -42,12 +41,8 @@ public class UtilTest {
 	@Test
 	public void testIsInstanceOfAbstractProject() throws IOException {
 		FreeStyleProject job = j.createFreeStyleProject();
-		String jobName = job.getName();
 
 		assertTrue(Util.isInstanceOfAbstractProject(job));
-		assertTrue(Util.isInstanceOfAbstractProject(jobName));
-
-		assertFalse(Util.isInstanceOfAbstractProject("abcdef"));
 	}
 
 	@Test
