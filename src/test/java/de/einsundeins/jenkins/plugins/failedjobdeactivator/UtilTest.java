@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Jochen A. Fuerbacher
+ * Copyright (c) 2017 Jochen A. Fuerbacher, 1&1 Telecommunication SE
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,47 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import hudson.model.FreeStyleProject;
+import java.io.IOException;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 
-public class HandleActionTest {
+import hudson.model.FreeStyleProject;
 
-    @Rule
-    public JenkinsRule j = new JenkinsRule();
-    
-    @Test
-    public void testHandleJobs() throws Exception{
-                     
-        FreeStyleProject projectDelete = j.createFreeStyleProject();
-        FreeStyleProject projectDeactivate = j.createFreeStyleProject();
-        
-        DetectedJob detectedJobTest1 = new DetectedJob();
-        DetectedJob detectedJobTest2 = new DetectedJob();
-        
-        detectedJobTest1.setaProject(projectDelete);
-        detectedJobTest1.setDeleteJob(true);
-        
-        detectedJobTest2.setaProject(projectDeactivate);
-        detectedJobTest2.setDeleteJob(false);
-        
-        List<DetectedJob> list = new ArrayList<DetectedJob>();
-        list.add(detectedJobTest1);
-        list.add(detectedJobTest2);
-        
-        HandleAction handleAction = new HandleAction();
-        handleAction.handleJobs(list);
-        
-        assertTrue((j.getInstance().getAllItems().size() == 1) && (j.getInstance().getAllItems().get(0) == projectDeactivate));
-    }
+public class UtilTest {
+
+	@Rule
+	public JenkinsRule j = new JenkinsRule();
+
+	@Test
+	public void testIsInstanceOfAbstractProject() throws IOException {
+		FreeStyleProject job = j.createFreeStyleProject();
+
+		assertTrue(Util.isInstanceOfAbstractProject(job));
+	}
+
+	@Test
+	public void testIsBuildFailureAnalyserAvailable() {
+		assertTrue(Util.isBuildFailureAnalyserAvailable());
+	}
+
+	@Test
+	public void testIsJobConfigHistoryAvailable() {
+		assertTrue(Util.isJobConfigHistoryAvailable());
+	}
+
 }

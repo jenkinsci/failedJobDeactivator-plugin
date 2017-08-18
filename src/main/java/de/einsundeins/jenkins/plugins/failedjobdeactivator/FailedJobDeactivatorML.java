@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Jochen A. Fuerbacher
+ * Copyright (c) 2017 Jochen A. Fuerbacher, 1&1 Telecommunication SE
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,65 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
-import hudson.Extension;
-import hudson.model.ManagementLink;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 
-/**
- * Class that generates the management link.
- * @author Jochen A. Fuerbacher
- *
- */
+import hudson.Extension;
+import hudson.model.ManagementLink;
+
 @Extension
-public class FailedJobDeactivatorManagementLink extends ManagementLink {
+public class FailedJobDeactivatorML extends ManagementLink {
 
-    /**
-     * Getter for icon link.
-     */
-    public String getIconFileName() {
+	@Override
+	public String getDisplayName() {
+		return Messages.displayName();
+	}
 
-        return Constants.ICON_FILE_ULR;
+	@Override
+	public String getIconFileName() {
+		return Constants.ICON_FILE_ULR;
+	}
 
-    }
+	@Override
+	public String getUrlName() {
+		return getUrlName(Stapler.getCurrentRequest());
+	}
 
-    /**
-     * Getter for the display name.
-     */
-    public String getDisplayName() {
+	private static String getUrlName(final StaplerRequest request) {
+		if (request == null) {
+			return "/plugin/failedJobDeactivator/";
+		}
+		return request.getContextPath() + "/plugin/failedJobDeactivator/";
+	}
 
-        return Messages.displayName();
-    }
-
-    /**
-     * Getter for the url.
-     */
-    @Override
-    public String getUrlName() {
-        return getUrlName(Stapler.getCurrentRequest());
-    }
-
-    /**
-     * Getter for the url.
-     * @param request
-     * @return the url name.
-     */
-    protected static String getUrlName(final StaplerRequest request) {
-        if (request == null) {
-            return "/plugin/failedJobDeactivator/";
-        }
-        return request.getContextPath() + "/plugin/failedJobDeactivator/";
-    }
-
-    /**
-     * Getter for the description.
-     */
-    @Override
-    public String getDescription() {
-
-        return Messages.managementLinkDescription();
-    }
 }
