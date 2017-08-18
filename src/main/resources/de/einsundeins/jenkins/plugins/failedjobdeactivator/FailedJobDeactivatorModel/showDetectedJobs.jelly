@@ -28,35 +28,35 @@
 	
 		<l:side-panel>
 			
-			<l:task icon="images/24x24/up.gif" title="${%Back to Dashboard}" href="${rootURL}/" />
+			<l:task icon="images/24x24/up.gif" title="${%backToDashboard}" href="${rootURL}/" />
 		
 		</l:side-panel>
 		
 		<l:main-panel>
 		
-			<h1>${%Failed Job Deactivator - Detected Jobs}</h1>
+			<h1>Failed Job Deactivator – ${%detectedJobs}</h1>
 			
 			<j:choose>
 				<j:when test="${it.getDetectedJobs().isEmpty()}">
-					<h2>${%No jobs detected.}</h2>
+					<h2>${%noJobs}.</h2>
 				</j:when>
 			
 				<j:otherwise>
-					<h2>${%Number of detected jobs: } ${it.getDetectedJobs().size()}</h2>
+					<h2>${%number}: ${it.getDetectedJobs().size()}</h2>
 					
 					<f:form action="handleJobs" method="post" name="handleDetectedJobs">
 
 						<table id="showDetectedJobs" border="1px" class="pane sortable">
 							<th class="pane-header">${%Job}</th>
-							<th class="pane-header">${%Last successful build}</th>
-							<th class="pane-header">${%Last build}</th>
+							<th class="pane-header">${%lastSuccessfulBuild}</th>
+							<th class="pane-header">${%lastBuild}</th>
 							<j:if test="${it.isBuildFailureAnalyserAvailable()}">
-								<th class="pane-header">${%Last failure cause}</th>
+								<th class="pane-header">${%lastFailureCause}</th>
 							</j:if>
 							<j:if test="${it.isJobConfigHistoryAvailable()}">
-								<th class="pane-header">${%Last user}</th>
+								<th class="pane-header">${%lastUser}</th>
 							</j:if>
-							<th class="pane-header">${%Choose action}</th>
+							<th class="pane-header">${%action}</th>
 				
 							<j:forEach var="job" items="${it.getDetectedJobs()}">
 								<tr>
@@ -85,11 +85,11 @@
 						<br />
 						
 						<f:entry>
-							<f:submit name="performJobAction" value="${%Start handling job}" />
+							<f:submit name="performJobAction" value="${%handling}" />
 						</f:entry>
 						
 						<f:entry>
-							<f:submit name="generateCsv" value="${%Generate CSV file}" />
+							<f:submit name="generateCsv" value="${%csv}" />
 						</f:entry>
 					</f:form>
 				</j:otherwise>

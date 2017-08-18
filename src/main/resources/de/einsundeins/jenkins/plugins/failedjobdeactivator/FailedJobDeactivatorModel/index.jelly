@@ -38,22 +38,22 @@
 			
 			<f:form action="startDetection">
 				
-				<f:entry title="${%Deadline of last successful build}" 
-				         description="(${%in days})" 
+				<f:entry title="${%deadline}" 
+				         description="(${%deadline.description})" 
 				         field="lastSuccessfulBuild">
 					<f:textbox default="${it.defaultLastSuccessfulBuild}" />
 				</f:entry>
 				
-				<f:entry title="${%Limit number of jobs for detection}" field="limit">
+				<f:entry title="${%limit}" field="limit">
 					<f:textbox default="-1" />
 				</f:entry>
 				
-				<f:entry title="${%Limit detection to match pattern}" field="regex">
+				<f:entry title="${%pattern}" field="regex">
 					<f:textbox />
 				</f:entry>
 				
 				<f:entry>
-					<f:submit value="${%Start detection}" />
+					<f:submit value="${%start}" />
 				</f:entry>
 			
 			</f:form>
