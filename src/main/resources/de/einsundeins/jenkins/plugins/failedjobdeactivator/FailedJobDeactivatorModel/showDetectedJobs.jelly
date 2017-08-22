@@ -74,8 +74,8 @@
 											<j:if test="${it.isInstanceOfAbstractProject(job)}">
 												<option value="disable">${%Disable}</option>
 											</j:if>
-											<option value="delete">${%Delete}</option>
 											<option value="ignore">${%Ignore}</option>
+											<option value="delete">${%Delete}</option>
 										</select>
 									</td>
 								</tr>
