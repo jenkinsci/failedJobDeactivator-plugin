@@ -45,9 +45,19 @@ public class FailedJobDeactivatorModel extends Plugin {
 			.getLogger(FailedJobDeactivatorModel.class.getName());
 
 	private JobScanner scanner;
+	private boolean checkUsers;
+	private boolean checkBuildFailures;
 
 	public int getDefaultLastSuccessfulBuild() {
 		return Constants.DEFAULT_LAST_SUCCESSFUL_BUILD;
+	}
+
+	public boolean getCheckUsers() {
+		return checkUsers;
+	}
+
+	public boolean getCheckFailureCauses() {
+		return checkBuildFailures;
 	}
 
 	public void doStartDetection(StaplerRequest req, StaplerResponse rsp)
@@ -57,6 +67,17 @@ public class FailedJobDeactivatorModel extends Plugin {
 
 		try {
 			JSONObject submittedForm = req.getSubmittedForm();
+			try {
+				checkUsers = submittedForm.getBoolean("checkUsers");
+			} catch (Exception e) {
+				checkUsers = false;
+			}
+			try {
+				checkBuildFailures = submittedForm
+						.getBoolean("checkBuildFailures");
+			} catch (Exception e) {
+				checkBuildFailures = false;
+			}
 			scanner = new JobScanner(
 					submittedForm.getLong("lastSuccessfulBuild"),
 					submittedForm.getInt("limit"),
@@ -75,8 +96,8 @@ public class FailedJobDeactivatorModel extends Plugin {
 		return Util.isInstanceOfAbstractProject(job);
 	}
 
-	public boolean isBuildFailureAnalyserAvailable() {
-		return Util.isBuildFailureAnalyserAvailable();
+	public boolean isBuildFailureAnalyzerAvailable() {
+		return Util.isBuildFailureAnalyzerAvailable();
 	}
 
 	public boolean isJobConfigHistoryAvailable() {

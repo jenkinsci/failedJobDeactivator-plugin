@@ -50,10 +50,10 @@
 							<th class="pane-header">${%Job}</th>
 							<th class="pane-header">${%lastSuccessfulBuild}</th>
 							<th class="pane-header">${%lastBuild}</th>
-							<j:if test="${it.isBuildFailureAnalyserAvailable()}">
+							<j:if test="${it.getCheckFailureCauses()}">
 								<th class="pane-header">${%lastFailureCause}</th>
 							</j:if>
-							<j:if test="${it.isJobConfigHistoryAvailable()}">
+							<j:if test="${it.getCheckUsers()}">
 								<th class="pane-header">${%lastUser}</th>
 							</j:if>
 							<th class="pane-header">${%action}</th>
@@ -63,10 +63,10 @@
 									<td align="left"><a href="${rootURL}/${job.getUrl()}">${job.getName()}</a></td>
 									<td align="right">${job.getLastSuccessfulBuild().getTime()}</td>
 									<td align="right">${job.getLastBuild().getTime()}</td>
-									<j:if test="${it.isBuildFailureAnalyserAvailable()}">
+									<j:if test="${it.getCheckFailureCauses()}">
 										<td align="left">${it.getFailureCauses(job)}</td>
 									</j:if>
-									<j:if test="${it.isJobConfigHistoryAvailable()}">
+									<j:if test="${it.getCheckUsers()}">
 										<td align="left"><a href="${rootURL}/${job.getUrl()}jobConfigHistory/">${it.getLastUser(job)}</a></td>
 									</j:if>
 									<td align="center">
@@ -74,8 +74,8 @@
 											<j:if test="${it.isInstanceOfAbstractProject(job)}">
 												<option value="disable">${%Disable}</option>
 											</j:if>
-											<option value="delete">${%Delete}</option>
 											<option value="ignore">${%Ignore}</option>
+											<option value="delete">${%Delete}</option>
 										</select>
 									</td>
 								</tr>

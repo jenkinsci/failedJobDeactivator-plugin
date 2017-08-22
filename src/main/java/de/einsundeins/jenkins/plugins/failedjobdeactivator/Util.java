@@ -61,7 +61,7 @@ public class Util {
 		return false;
 	}
 
-	public static boolean isBuildFailureAnalyserAvailable() {
+	public static boolean isBuildFailureAnalyzerAvailable() {
 		Jenkins jenkins = Jenkins.getInstance();
 		if (jenkins == null)
 			return false;
@@ -185,7 +185,7 @@ public class Util {
 				stringBuilder.append(",").append(lastSuccessfulBuild);
 				stringBuilder.append(",").append(lastBuild);
 
-				if (isBuildFailureAnalyserAvailable()) {
+				if (isBuildFailureAnalyzerAvailable()) {
 					String failureCauses = getFailureCauses(job);
 					stringBuilder.append(",").append(failureCauses);
 				}

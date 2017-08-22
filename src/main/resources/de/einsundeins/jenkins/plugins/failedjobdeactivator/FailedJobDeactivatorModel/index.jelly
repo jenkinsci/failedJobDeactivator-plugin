@@ -52,6 +52,18 @@
 					<f:textbox />
 				</f:entry>
 				
+				<j:if test="${it.isBuildFailureAnalyzerAvailable()}">
+					<f:entry title="${%buildFailureAnalyzer}" field="checkBuildFailures">
+						<f:checkbox checked="true" />
+					</f:entry>
+				</j:if>
+				
+				<j:if test="${it.isJobConfigHistoryAvailable()}">
+					<f:entry title="${%jobConfigHistory}" field="checkUsers">
+						<f:checkbox checked="true" />
+					</f:entry>
+				</j:if>
+				
 				<f:entry>
 					<f:submit value="${%start}" />
 				</f:entry>
