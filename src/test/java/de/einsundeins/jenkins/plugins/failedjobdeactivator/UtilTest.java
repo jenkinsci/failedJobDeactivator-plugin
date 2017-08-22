@@ -46,8 +46,8 @@ public class UtilTest {
 	}
 
 	@Test
-	public void testIsBuildFailureAnalyserAvailable() {
-		assertTrue(Util.isBuildFailureAnalyserAvailable());
+	public void testIsBuildFailureAnalyzerAvailable() {
+		assertTrue(Util.isBuildFailureAnalyzerAvailable());
 	}
 
 	@Test
