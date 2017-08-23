@@ -23,15 +23,25 @@
  */
 package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 
+import com.sonyericsson.jenkins.plugins.bfa.model.FailureCause;
+import com.sonyericsson.jenkins.plugins.bfa.model.FailureCauseBuildAction;
+import com.sonyericsson.jenkins.plugins.bfa.model.FoundFailureCause;
+
+import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
+import hudson.model.queue.QueueTaskFuture;
 
 public class UtilTest {
 
@@ -53,6 +63,36 @@ public class UtilTest {
 	@Test
 	public void testIsJobConfigHistoryAvailable() {
 		assertTrue(Util.isJobConfigHistoryAvailable());
+	}
+
+	@Test
+	public void testGetFailureCauses()
+			throws IOException, InterruptedException, ExecutionException {
+		FreeStyleProject job = j.createFreeStyleProject();
+
+		FailureCause cause1 = new FailureCause("A Name", "A description");
+		FoundFailureCause found1 = new FoundFailureCause(cause1);
+
+		FailureCause cause2 = new FailureCause("A second Name",
+				"A second description");
+		FoundFailureCause found2 = new FoundFailureCause(cause2);
+
+		List<FoundFailureCause> causes = new LinkedList<>();
+		causes.add(found1);
+		causes.add(found2);
+
+		FailureCauseBuildAction action = new FailureCauseBuildAction(causes);
+
+		QueueTaskFuture<FreeStyleBuild> future = job.scheduleBuild2(0);
+		future.get();
+
+		assertTrue(job.getLastBuild() != null);
+
+		FreeStyleBuild build = job.getLastBuild();
+		build.addAction(action);
+		build.save();
+		
+		assertEquals("A Name\nA second Name\n", Util.getFailureCauses(job));
 	}
 
 }
