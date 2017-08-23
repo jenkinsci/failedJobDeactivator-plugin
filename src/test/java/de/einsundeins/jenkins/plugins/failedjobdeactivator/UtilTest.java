@@ -41,6 +41,7 @@ import com.sonyericsson.jenkins.plugins.bfa.model.FoundFailureCause;
 
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
+import hudson.model.Job;
 import hudson.model.queue.QueueTaskFuture;
 
 public class UtilTest {
@@ -91,8 +92,21 @@ public class UtilTest {
 		FreeStyleBuild build = job.getLastBuild();
 		build.addAction(action);
 		build.save();
-		
+
 		assertEquals("A Name\nA second Name\n", Util.getFailureCauses(job));
+	}
+
+	@Test
+	public void testGetJobByName() throws IOException {
+		FreeStyleProject job = j.createFreeStyleProject();
+
+		job.renameTo("I am a Job");
+		job.save();
+
+		Job<?, ?> job2 = Util.getJobByName("I am a Job");
+
+		assertTrue(job2 != null);
+		assertEquals("I am a Job", job2.getDisplayName());
 	}
 
 }
