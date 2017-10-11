@@ -22,7 +22,9 @@ public class JobScanner {
 	long lastSuccessfulBuild;
 	int limit;
 	String regex;
-	long systemtime;
+	static long systemtime;
+	static boolean regexProvided;
+	static boolean isWorkflowMultibranchAvailable;
 
 	List<Job<?, ?>> detectedJobs;
 
@@ -31,36 +33,21 @@ public class JobScanner {
 				* Constants.DAYS_TO_64BIT_UNIXTIME;
 		this.limit = limit;
 		this.regex = regex;
-		this.systemtime = System.currentTimeMillis();
 	}
 
 	public void startDetection() {
 		this.detectedJobs = new LinkedList<>();
-		boolean regexProvided = regex != null && !regex.isEmpty();
+		systemtime = System.currentTimeMillis();
+		regexProvided = regex != null && !regex.isEmpty();
 		Jenkins jenkins = Jenkins.getInstance();
-		boolean isWorkflowMultibranchAvailable = Util
-				.isWorkflowMultibranchAvailable();
+		isWorkflowMultibranchAvailable = Util.isWorkflowMultibranchAvailable();
 		if (jenkins == null)
 			return;
 		for (Item item : jenkins.getAllItems()) {
 			if (limit == 0)
 				return;
 
-			// Only check TopLevelItems.
-			if (!(item instanceof TopLevelItem))
-				continue;
-
-			// Only check jobs.
-			if (!(item instanceof Job))
-				continue;
-
-			// Do not check job if it is part of a multibranch pipeline.
-			if (isWorkflowMultibranchAvailable
-					&& item.getParent() instanceof WorkflowMultiBranchProject)
-				continue;
-
-			// Only check items matching a pattern (if provided).
-			if (regexProvided && !jobnameMatchesPattern(item.getName()))
+			if (!isCandidate(item))
 				continue;
 
 			Job<?, ?> job = (Job<?, ?>) item;
@@ -78,6 +65,27 @@ public class JobScanner {
 			}
 
 		}
+	}
+
+	private boolean isCandidate(Item item) {
+		// Only check TopLevelItems.
+		if (!(item instanceof TopLevelItem))
+			return false;
+
+		// Only check jobs.
+		if (!(item instanceof Job))
+			return false;
+
+		// Do not check job if it is part of a multibranch pipeline.
+		if (isWorkflowMultibranchAvailable
+				&& item.getParent() instanceof WorkflowMultiBranchProject)
+			return false;
+
+		// Only check items matching a pattern (if provided).
+		if (regexProvided && !jobnameMatchesPattern(item.getName()))
+			return false;
+
+		return true;
 	}
 
 	private boolean jobHasNoBuildsAndExistsTooLong(Job<?, ?> job) {
@@ -118,7 +126,7 @@ public class JobScanner {
 	}
 
 	private boolean isInDeadline(long jobtime) {
-		if ((this.systemtime - jobtime) < lastSuccessfulBuild)
+		if ((systemtime - jobtime) < lastSuccessfulBuild)
 			return true;
 
 		return false;
