@@ -60,7 +60,7 @@
       <artifactId>workflow-multibranch</artifactId>
       <version>1.14.2</version>
       <optional>true</optional>
-	</dependency>
+    </dependency>
   </dependencies>
    
   <repositories>
