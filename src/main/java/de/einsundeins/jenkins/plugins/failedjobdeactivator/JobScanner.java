@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
+import hudson.model.TopLevelItem;
 import jenkins.model.Jenkins;
 
 public class JobScanner {
@@ -40,6 +41,9 @@ public class JobScanner {
 		for (Item item : jenkins.getAllItems()) {
 			if (limit == 0)
 				return;
+			
+			if(!(item instanceof TopLevelItem))
+				continue;
 
 			if (!(item instanceof Job))
 				continue;

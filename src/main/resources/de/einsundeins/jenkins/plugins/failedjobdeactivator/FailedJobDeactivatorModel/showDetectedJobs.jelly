@@ -60,7 +60,7 @@
 				
 							<j:forEach var="job" items="${it.getDetectedJobs()}">
 								<tr>
-									<td align="left"><a href="${rootURL}/${job.getUrl()}">${job.getName()}</a></td>
+									<td align="left"><a href="${rootURL}/${job.getUrl()}">${job.getFullName()}</a></td>
 									<td align="right">${job.getLastSuccessfulBuild().getTime()}</td>
 									<td align="right">${job.getLastBuild().getTime()}</td>
 									<j:if test="${it.getCheckFailureCauses()}">
