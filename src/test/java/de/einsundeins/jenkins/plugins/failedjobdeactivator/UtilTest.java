@@ -65,6 +65,11 @@ public class UtilTest {
 	public void testIsJobConfigHistoryAvailable() {
 		assertTrue(Util.isJobConfigHistoryAvailable());
 	}
+	
+	@Test
+	public void testIsWorkflowMultibranchAvailable() {
+		assertTrue(Util.isWorkflowMultibranchAvailable());
+	}
 
 	@Test
 	public void testGetFailureCauses()

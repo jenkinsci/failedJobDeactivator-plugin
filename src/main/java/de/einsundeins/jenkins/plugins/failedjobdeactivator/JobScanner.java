@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject;
+
 import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
@@ -36,18 +38,28 @@ public class JobScanner {
 		this.detectedJobs = new LinkedList<>();
 		boolean regexProvided = regex != null && !regex.isEmpty();
 		Jenkins jenkins = Jenkins.getInstance();
+		boolean isWorkflowMultibranchAvailable = Util
+				.isWorkflowMultibranchAvailable();
 		if (jenkins == null)
 			return;
 		for (Item item : jenkins.getAllItems()) {
 			if (limit == 0)
 				return;
-			
-			if(!(item instanceof TopLevelItem))
+
+			// Only check TopLevelItems.
+			if (!(item instanceof TopLevelItem))
 				continue;
 
+			// Only check jobs.
 			if (!(item instanceof Job))
 				continue;
 
+			// Do not check job if it is part of a multibranch pipeline.
+			if (isWorkflowMultibranchAvailable
+					&& item.getParent() instanceof WorkflowMultiBranchProject)
+				continue;
+
+			// Only check items matching a pattern (if provided).
 			if (regexProvided && !jobnameMatchesPattern(item.getName()))
 				continue;
 

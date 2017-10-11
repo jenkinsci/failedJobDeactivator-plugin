@@ -84,6 +84,18 @@ public class Util {
 
 		return true;
 	}
+	
+	public static boolean isWorkflowMultibranchAvailable() {
+		Jenkins jenkins = Jenkins.getInstance();
+		if (jenkins == null)
+			return false;
+		Plugin plugin = jenkins.getPlugin("workflow-multibranch");
+
+		if (plugin == null)
+			return false;
+
+		return true;
+	}
 
 	public static String getFailureCauses(Job<?, ?> job) {
 
