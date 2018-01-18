@@ -67,6 +67,11 @@ public class UtilTest {
 	}
 	
 	@Test
+	public void testIsMavenMultiBranchAvailable() {
+		assertTrue(Util.isMavenMultiBranchAvailable());
+	}
+	
+	@Test
 	public void testIsWorkflowMultibranchAvailable() {
 		assertTrue(Util.isWorkflowMultibranchAvailable());
 	}

@@ -31,6 +31,8 @@ import java.util.regex.Pattern;
 
 import org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject;
 
+import com.github.mjdetullio.jenkins.plugins.multibranch.MavenMultiBranchProject;
+
 import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
@@ -48,6 +50,7 @@ public class JobScanner {
 	static long systemtime;
 	static boolean regexProvided;
 	static boolean isWorkflowMultibranchAvailable;
+	static boolean isMavenMultiBranchAvailable;
 
 	List<Job<?, ?>> detectedJobs;
 
@@ -64,6 +67,8 @@ public class JobScanner {
 		regexProvided = regex != null && !regex.isEmpty();
 		Jenkins jenkins = Jenkins.getInstance();
 		isWorkflowMultibranchAvailable = Util.isWorkflowMultibranchAvailable();
+		isMavenMultiBranchAvailable = Util.isMavenMultiBranchAvailable();
+
 		if (jenkins == null)
 			return;
 		for (Item item : jenkins.getAllItems()) {
@@ -97,6 +102,11 @@ public class JobScanner {
 
 		// Only check jobs.
 		if (!(item instanceof Job))
+			return false;
+
+		// Do not check job if it is part of a Maven multi branch project.
+		if (isMavenMultiBranchAvailable
+				&& item.getParent() instanceof MavenMultiBranchProject)
 			return false;
 
 		// Do not check job if it is part of a multibranch pipeline.
