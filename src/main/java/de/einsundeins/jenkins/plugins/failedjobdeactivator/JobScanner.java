@@ -47,10 +47,10 @@ public class JobScanner {
 	long lastSuccessfulBuild;
 	int limit;
 	String regex;
-	static long systemtime;
-	static boolean regexProvided;
-	static boolean isWorkflowMultibranchAvailable;
-	static boolean isMavenMultiBranchAvailable;
+	transient long systemtime;
+	transient boolean regexProvided;
+	transient boolean isWorkflowMultibranchAvailable;
+	transient boolean isMavenMultiBranchAvailable;
 
 	List<Job<?, ?>> detectedJobs;
 
