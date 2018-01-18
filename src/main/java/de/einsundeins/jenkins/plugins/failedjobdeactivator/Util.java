@@ -96,6 +96,18 @@ public class Util {
 
 		return true;
 	}
+	
+	public static boolean isMavenMultiBranchAvailable() {
+		Jenkins jenkins = Jenkins.getInstance();
+		if (jenkins == null)
+			return false;
+		Plugin plugin = jenkins.getPlugin("multi-branch-project-plugin");
+
+		if (plugin == null)
+			return false;
+
+		return true;
+	}
 
 	public static String getFailureCauses(Job<?, ?> job) {
 

@@ -61,6 +61,12 @@
       <version>1.14.2</version>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>com.github.mjdetullio.jenkins.plugins</groupId>
+      <artifactId>multi-branch-project-plugin</artifactId>
+      <version>0.7</version>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
    
   <repositories>
