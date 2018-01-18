@@ -41,12 +41,14 @@ import com.sonyericsson.jenkins.plugins.bfa.model.FoundFailureCause;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Plugin;
+import hudson.PluginWrapper;
 import hudson.model.AbstractProject;
 import hudson.model.Item;
 import hudson.model.Job;
 import hudson.model.Run;
 import hudson.plugins.jobConfigHistory.ConfigInfo;
 import hudson.plugins.jobConfigHistory.JobConfigHistoryProjectAction;
+import hudson.util.VersionNumber;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 
@@ -84,7 +86,7 @@ public class Util {
 
 		return true;
 	}
-	
+
 	public static boolean isWorkflowMultibranchAvailable() {
 		Jenkins jenkins = Jenkins.getInstance();
 		if (jenkins == null)
@@ -96,7 +98,7 @@ public class Util {
 
 		return true;
 	}
-	
+
 	public static boolean isMavenMultiBranchAvailable() {
 		Jenkins jenkins = Jenkins.getInstance();
 		if (jenkins == null)
@@ -107,6 +109,27 @@ public class Util {
 			return false;
 
 		return true;
+	}
+
+	public static boolean canPipelineJobsGetDisabled() {
+
+		Jenkins jenkins = Jenkins.getInstance();
+		if (jenkins == null)
+			return false;
+
+		Plugin plugin = jenkins.getPlugin("workflow-job");
+		if (plugin == null)
+			return false;
+
+		PluginWrapper wrapper = plugin.getWrapper();
+		if (wrapper == null)
+			return false;
+
+		// Pipeline jobs can get disabled since version 2.11 of workflow-job.
+		VersionNumber versionSupportDisabling = new VersionNumber("2.11");
+
+		boolean canGetDisabled = !wrapper.isOlderThan(versionSupportDisabling);
+		return canGetDisabled;
 	}
 
 	public static String getFailureCauses(Job<?, ?> job) {

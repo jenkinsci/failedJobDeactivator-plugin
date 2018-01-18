@@ -57,6 +57,8 @@
 								<th class="pane-header">${%lastUser}</th>
 							</j:if>
 							<th class="pane-header">${%action}</th>
+							
+							<j:set var="canPipelineJobsGetDisabled" value="${it.canPipelineJobsGetDisabled()}"/>
 				
 							<j:forEach var="job" items="${it.getDetectedJobs()}">
 								<tr>
@@ -71,7 +73,7 @@
 									</j:if>
 									<td align="center">
 										<select name="${job.getName()}" field="jobAction">
-											<j:if test="${it.isInstanceOfAbstractProject(job)}">
+											<j:if test="${it.isInstanceOfAbstractProject(job) || canPipelineJobsGetDisabled}">
 												<option value="disable">${%Disable}</option>
 											</j:if>
 											<option value="ignore">${%Ignore}</option>

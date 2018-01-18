@@ -24,6 +24,7 @@
 package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -65,15 +66,21 @@ public class UtilTest {
 	public void testIsJobConfigHistoryAvailable() {
 		assertTrue(Util.isJobConfigHistoryAvailable());
 	}
-	
+
 	@Test
 	public void testIsMavenMultiBranchAvailable() {
 		assertTrue(Util.isMavenMultiBranchAvailable());
 	}
-	
+
 	@Test
 	public void testIsWorkflowMultibranchAvailable() {
 		assertTrue(Util.isWorkflowMultibranchAvailable());
+	}
+
+	@Test
+	public void testCanPipelineJobsGetDisabled() {
+		// Version 1.14.2 currently defined in pom.
+		assertFalse(Util.canPipelineJobsGetDisabled());
 	}
 
 	@Test

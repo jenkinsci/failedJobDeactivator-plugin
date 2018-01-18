@@ -104,6 +104,10 @@ public class FailedJobDeactivatorModel extends Plugin {
 		return Util.isJobConfigHistoryAvailable();
 	}
 
+	public boolean canPipelineJobsGetDisabled() {
+		return Util.canPipelineJobsGetDisabled();
+	}
+
 	public String getFailureCauses(Job<?, ?> job) {
 		return Util.getFailureCauses(job);
 	}
