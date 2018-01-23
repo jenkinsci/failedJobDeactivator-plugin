@@ -232,11 +232,6 @@ public class Util {
 				stringBuilder.append(",").append(lastSuccessfulBuild);
 				stringBuilder.append(",").append(lastBuild);
 
-				if (isBuildFailureAnalyzerAvailable()) {
-					String failureCauses = getFailureCauses(job);
-					stringBuilder.append(",").append(failureCauses);
-				}
-
 				stringBuilder.append("\n");
 			}
 

@@ -25,6 +25,7 @@ package de.einsundeins.jenkins.plugins.failedjobdeactivator;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -120,16 +121,21 @@ public class FailedJobDeactivatorModel extends Plugin {
 			throws IOException, ServletException {
 
 		if (req.hasParameter("generateCsv")) {
-			File file = Util.generateCsv(getDetectedJobs());
-			rsp.setContentType("text/csv");
-			rsp.addHeader("Content-Disposition",
-					"attachment; filename=" + Constants.CSV_FILENAME);
-			rsp.serveFile(req, file.toURI().toURL());
+			serveCsvFile(req, rsp);
 		} else {
 			rsp.forwardToPreviousPage(req);
 			new JobHandling().performJobHandling(
 					Util.convertJsonToMap(req.getSubmittedForm()));
 		}
+	}
+
+	private void serveCsvFile(StaplerRequest req, StaplerResponse rsp)
+			throws MalformedURLException, ServletException, IOException {
+		File file = Util.generateCsv(getDetectedJobs());
+		rsp.setContentType("text/csv");
+		rsp.addHeader("Content-Disposition",
+				"attachment; filename=" + Constants.CSV_FILENAME);
+		rsp.serveFile(req, file.toURI().toURL());
 	}
 
 }
