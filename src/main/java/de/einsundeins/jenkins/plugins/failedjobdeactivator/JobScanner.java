@@ -81,6 +81,8 @@ public class JobScanner {
 			Job<?, ?> job = (Job<?, ?>) item;
 			if (jobHasNoBuildsAndExistsTooLong(job)) {
 				detectedJobs.add(job);
+				logger.log(Level.FINEST, "Added job " + job.getName()
+						+ " to list of detected jobs.");
 				limit--;
 				continue;
 			}
@@ -90,9 +92,14 @@ public class JobScanner {
 			if (jobHasNoSuccessfulBuilds(job)) {
 				limit--;
 				detectedJobs.add(job);
+				logger.log(Level.FINEST, "Added job " + job.getName()
+						+ " to list of detected jobs.");
 			}
 
 		}
+
+		logger.log(Level.FINEST,
+				"We have " + detectedJobs.size() + " jobs detected.");
 	}
 
 	private boolean isCandidate(Item item) {
