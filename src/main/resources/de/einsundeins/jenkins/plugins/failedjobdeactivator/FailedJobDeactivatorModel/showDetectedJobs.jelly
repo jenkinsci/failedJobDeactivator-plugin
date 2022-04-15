@@ -28,7 +28,7 @@
 	
 		<l:side-panel>
 			
-			<l:task icon="images/24x24/up.gif" title="${%backToDashboard}" href="${rootURL}/" />
+			<l:task icon="icon-up icon-md" title="${%backToDashboard}" href="${rootURL}/" />
 		
 		</l:side-panel>
 		
